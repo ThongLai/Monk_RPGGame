@@ -63,9 +63,12 @@
     <ClCompile Include="GameHandler.cpp">
       <Filter>Source Files\Controllers</Filter>
     </ClCompile>
+<<<<<<< HEAD
+=======
     <ClCompile Include="LogController.cpp">
       <Filter>Source Files\Controllers</Filter>
     </ClCompile>
+>>>>>>> origin/main
     <ClCompile Include="PlayerModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -75,14 +78,23 @@
     <ClCompile Include="CommonConfig.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+<<<<<<< HEAD
+    <ClCompile Include="Logs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+=======
+>>>>>>> origin/main
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EmptyRoom.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+<<<<<<< HEAD
+=======
     <ClInclude Include="main.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+>>>>>>> origin/main
     <ClInclude Include="MonsterRoom.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -104,9 +116,12 @@
     <ClInclude Include="GameHandler.h">
       <Filter>Header Files\Controllers</Filter>
     </ClInclude>
+<<<<<<< HEAD
+=======
     <ClInclude Include="LogController.h">
       <Filter>Header Files\Controllers</Filter>
     </ClInclude>
+>>>>>>> origin/main
     <ClInclude Include="MonsterController.h">
       <Filter>Header Files\Controllers</Filter>
     </ClInclude>
@@ -128,5 +143,11 @@
     <ClInclude Include="CommonConfig.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+<<<<<<< HEAD
+    <ClInclude Include="Logs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+=======
+>>>>>>> origin/main
   </ItemGroup>
 </Project>

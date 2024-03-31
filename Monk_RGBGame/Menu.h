@@ -1,6 +1,18 @@
 #pragma once
+<<<<<<< HEAD
+
 #include "Box.h"
 
+extern string MAINMENU[];
+extern int MAINMENU_SIZE;
+
+extern string SETTINGS[];
+extern int SETTINGS_SIZE;
+
+=======
+#include "Box.h"
+
+>>>>>>> origin/main
 class MENU : public BOX
 {
 private:

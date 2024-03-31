@@ -1,6 +1,10 @@
 #pragma once
+<<<<<<< HEAD
+#include "CommonConfig.h"
+=======
 
 #include "GameHandler.h"
+>>>>>>> origin/main
 
 class BOX
 {

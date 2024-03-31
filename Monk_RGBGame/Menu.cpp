@@ -1,5 +1,28 @@
 #include "Menu.h"
 
+<<<<<<< HEAD
+string MAINMENU[] =
+{
+	"Play",
+	"Load Game",
+	"Leader Board",
+	"Instruction",
+	"Settings",
+	"Credits",
+	"Quit",
+};
+int MAINMENU_SIZE = sizeof(MAINMENU) / sizeof(string);
+
+string SETTINGS[] =
+{
+	"Window",
+	"Audio",
+	"Return"
+};
+int SETTINGS_SIZE = sizeof(SETTINGS) / sizeof(string);
+
+=======
+>>>>>>> origin/main
 //MENU
 MENU::MENU() : n(1), title("") {
 	nBox = new BOX[n];

@@ -23,7 +23,11 @@
     <ClCompile Include="CommonConfig.cpp" />
     <ClCompile Include="GameHandler.cpp" />
     <ClCompile Include="EmptyRoom.cpp" />
+<<<<<<< HEAD
+    <ClCompile Include="Logs.cpp" />
+=======
     <ClCompile Include="LogController.cpp" />
+>>>>>>> origin/main
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="ModelArts.cpp" />
@@ -38,12 +42,19 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CommonConfig.h" />
+<<<<<<< HEAD
+    <ClInclude Include="Logs.h" />
+=======
+>>>>>>> origin/main
     <ClInclude Include="ModelArts.h" />
     <ClInclude Include="Box.h" />
     <ClInclude Include="GameHandler.h" />
     <ClInclude Include="EmptyRoom.h" />
+<<<<<<< HEAD
+=======
     <ClInclude Include="LogController.h" />
     <ClInclude Include="main.h" />
+>>>>>>> origin/main
     <ClInclude Include="Menu.h" />
     <ClInclude Include="MonsterController.h" />
     <ClInclude Include="MonsterModel.h" />

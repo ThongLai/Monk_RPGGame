@@ -14,8 +14,13 @@ using namespace std;
  * @param playerName The Player's name which is provided when the game starts
  * @param playerDescription The description of the Monk, provided by the player at the start.
  */
+<<<<<<< HEAD
+PlayerController::PlayerController(int damage, string playerName, string playerDescription) {
+    this->player = new PlayerModel(damage, playerName, playerDescription); // Initialise the player Model
+=======
 PlayerController::PlayerController(int attack, string playerName, string playerDescription) {
     this->player = new PlayerModel(attack, playerName, playerDescription); // Initialise the player Model
+>>>>>>> origin/main
 }
 /**
  * Get the player's current health points

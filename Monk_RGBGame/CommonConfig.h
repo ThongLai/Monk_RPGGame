@@ -4,10 +4,19 @@
 #include <windows.h>
 #include <iostream>
 #include <conio.h>
+<<<<<<< HEAD
+#include <fstream>
+
+=======
+>>>>>>> origin/main
 //#include <random>
 using namespace std;
 #pragma comment(lib, "Winmm.lib")
 
+<<<<<<< HEAD
+// Define keys from keyboards
+=======
+>>>>>>> origin/main
 #define KEY_UP 72
 #define KEY_DOWN 80
 #define KEY_LEFT 75
@@ -15,6 +24,10 @@ using namespace std;
 #define ENTER 13
 #define ESC 27
 
+<<<<<<< HEAD
+// Define Color's Codes
+=======
+>>>>>>> origin/main
 #define BLACK			0
 #define BLUE			1
 #define GREEN			2
@@ -32,15 +45,52 @@ using namespace std;
 #define YELLOW			14
 #define WHITE			15
 
+<<<<<<< HEAD
+// Parameters for Gameplay
+extern int SCREEN_WIDTH_PXL;
+extern int SCREEN_HEIGHT_PXL;
+
+extern int SCREEN_WIDTH;
+extern int SCREEN_HEIGHT;
+
+extern int GAMEPLAY_W;
+extern int STATUS_W;
+extern int SAVE_SIZE;
+extern int LEADERBOARD_SIZE;
+
+// Set up when starting up functions
+void setRasterFonts();
+void SetWindowSize(int width, int height);
+void FixConsoleWindow();
+void HideCursor();
+void SetUpParameters();
+
+void FullScreenMode();
+void WindowedMode();
+void GetWindowSize();
+=======
+>>>>>>> origin/main
 WORD DefineColor(int t_color, int t_background);
 void SetTextColor(WORD wColor);
 void GotoXY(int x, int y);
 bool GetXY(int& x, int& y);
 bool GetColor(int& color);
+<<<<<<< HEAD
+
+int midWidth(int width, string message);
+int midWidth(int width, int content_width);
+int midHeight(int height, int content_height);
+void printMessCenter(string message, int text_color = WHITE, int bg_color = BLACK);
+
+// Sounds and Musics
+void SetAllVolumes(int volume);
+
+=======
 int midWidth(int width, string message);
 int midWidth(int width, int content_width);
 int midHeight(int height, int content_height);
 void printMessCenter(string message);
+>>>>>>> origin/main
 
 
 //Save status of coordinates and text/background color
