@@ -1,20 +1,18 @@
-//
-// Created by Mike on 21/03/2019.
-//
-
-#ifndef MONKASSIGNMENT_PUZZLEROOM_H
-#define MONKASSIGNMENT_PUZZLEROOM_H
-
+#pragma once
 
 #include "Room.h"
 
 class PuzzleRoom : public Room {
+private:
+    int puzzleId;
+
+    vector <string> riddles;
+    vector <string> answers;
 public:
-    PuzzleRoom(Room *);
+    PuzzleRoom();
 
-    void Generate() override;
-
-    void Render(string) override;
+    void Generate(int = 0);
+    void Render(string = "");
 
     bool puzzleCompleted;
 
@@ -29,10 +27,4 @@ public:
     void SetAnswers();
 
     void setPuzzleId(int puzzleId);
-
-private:
-    int puzzleId;
 };
-
-
-#endif //MONKASSIGNMENT_PUZZLEROOM_H

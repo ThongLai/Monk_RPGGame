@@ -1,21 +1,19 @@
-//
-// Created by Mike on 09/03/2019.
-//
-
-#ifndef MONKASSIGNMENT_MONSTERROOM_H
-#define MONKASSIGNMENT_MONSTERROOM_H
+#pragma once
 
 #include "Room.h"
 #include "MonsterController.h"
 
 class MonsterRoom : public Room {
+private:
+    MonsterController* monster;
 public:
-    MonsterRoom(Room*);
-    void Generate(int) override;
+    MonsterRoom();
     MonsterController* getMonster();
-    void Render() override;
-    bool isMonsterAlive();
 
+    void Generate(int = 0);
+    void Render(string = "");
+
+    bool isMonsterAlive();
     // Methods from the MonsterController
     int getMonsterHealth();
     int getMonsterBaseHealth();
@@ -26,9 +24,4 @@ public:
     int getMonsterAttackPoints();
     bool monsterTryAction();
     int monsterActionToPerform();
-private:
-    MonsterController *monster;
 };
-
-
-#endif //MONKASSIGNMENT_MONSTERROOM_H

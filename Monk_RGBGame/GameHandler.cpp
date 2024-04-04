@@ -1,8 +1,4 @@
-//
-// Created by Mike on 09/03/2019.
-//
 #include "GameHandler.h"
-
 
 GameHandler::GameHandler()
 {
@@ -33,13 +29,22 @@ void GameHandler::init()
 
 void GameHandler::resetData()
 {
-    randomController = new RandomController();
+    string name, bio;
 
-    EmptyRoom* spawnRoom = new EmptyRoom(nullptr);
-    spawnRoom->Generate(randomController->getRandomIndex(1, 100));
-    spawnRoom->Render();
-    currentRoom = spawnRoom;
-    logs->printLogs("Generated Empty spawn room.");
+    cout << "You're in a fractured reality. And a dungeon, don't forget that. Once you advance through a door, there's no going back. Good luck... \n \n Now that's over, what's your name?\n";
+    cin >> name;
+
+    std::cout << "The powerful Monk has established his name; " << name << " \n But what's his story? \n";
+    cin >> bio;
+
+    setPlayer(name, bio);
+
+    EmptyRoom spawnRoom;
+    spawnRoom.Generate(generateRand(1, 100));
+    spawnRoom.Render();
+
+    curRoom = &spawnRoom;
+    logs->printLogs("Generated Empty Spawn Room.");
     ExploreEmptyRoom();
 
     //removeArts();
@@ -70,8 +75,9 @@ void GameHandler::resetGame()
 void GameHandler::setPlayer(string playerName, string description)
 {
     playerController = new PlayerController(3, playerName, description);
-    //logController->log("Monk created with name: " + playerName + " with a base health of 15, and a damage of 3.");
-    //logController->log("Monk's description: " + description);
+
+    logs->printLogs("Monk created with name: " + playerName + " with a base health of 15, and a damage of 3.");
+    logs->printLogs("Monk's description: " + description);
 }
 
 void GameHandler::GenerateRoom(Room* sender, string direction) {
@@ -106,50 +112,50 @@ void GameHandler::GenerateRoom(Room* sender, string direction) {
     switch (roomId) {
     default:
     case (0):
-        newRoom = new EmptyRoom(sender);
-        newRoom->Generate(randomController->getRandomIndex(1, 100));
+        newRoom = new EmptyRoom;
+        newRoom->Generate(generateRand(1, 100));
         newRoom->Render();
 
-        if (direction == "0") currentRoom->setLeftRoom(newRoom);
-        else currentRoom->setRightRoom(newRoom);
+        if (direction == "0") curRoom->setLeftRoom(newRoom);
+        else curRoom->setRightRoom(newRoom);
 
-        currentRoom = newRoom;
+        curRoom = newRoom;
         logs->printLogs("Generated new Empty room");
         ExploreEmptyRoom();
         break;
     case (1): {
-        newRoom = new MonsterRoom(sender);
-        newRoom->Generate(randomController->getRandomIndex(0, 2));
+        newRoom = new MonsterRoom;
+        newRoom->Generate(generateRand(0, 2));
         newRoom->Render();
 
-        if (direction == "0") currentRoom->setLeftRoom(newRoom);
-        else currentRoom->setRightRoom(newRoom);
+        if (direction == "0") curRoom->setLeftRoom(newRoom);
+        else curRoom->setRightRoom(newRoom);
 
-        currentRoom = newRoom;
+        curRoom = newRoom;
         logs->printLogs("Generated new Monster room");
         BeginCombat();
         break;
     }
     case (2): {
-        TreasureRoom* treasureRoom = new TreasureRoom(sender);
+        TreasureRoom* treasureRoom = new TreasureRoom();
         treasureRoom->Generate();
 
-        if (direction == "0") currentRoom->setLeftRoom(treasureRoom);
-        else currentRoom->setRightRoom(treasureRoom);
+        if (direction == "0") curRoom->setLeftRoom(treasureRoom);
+        else curRoom->setRightRoom(treasureRoom);
 
-        currentRoom = treasureRoom;
+        curRoom = treasureRoom;
         treasureRoom->Render(playerController->getPlayerName());
         logs->printLogs("Generated Treasure room!");
         break;
     }
     case (3): {
-        PuzzleRoom* puzzleRoom = new PuzzleRoom(sender);
+        PuzzleRoom* puzzleRoom = new PuzzleRoom();
         puzzleRoom->Generate();
         puzzleRoom->Render(playerController->getPlayerName());
-        currentRoom = puzzleRoom;
+        curRoom = puzzleRoom;
 
         logs->printLogs("Generated Puzzle room!");
-        int puzzleId = randomController->getRandomIndex(0, (puzzleRoom->getPuzzleSize() - 1));
+        int puzzleId = generateRand(0, (puzzleRoom->getPuzzleSize() - 1));
         puzzleRoom->setPuzzleId(puzzleId);
         BeginPuzzle();
         break;
@@ -168,7 +174,7 @@ void GameHandler::GenerateRoom(Room* sender, string direction) {
  */
 int GameHandler::rngRoomId() {
     logs->printLogs("Choosing a random room ID from the percentage chances");
-    int roomChance = randomController->getRandomIndex(1, 100);
+    int roomChance = generateRand(1, 100);
     if (roomChance < treasureChance) {
         return 2;
     }
@@ -186,7 +192,7 @@ int GameHandler::rngRoomId() {
 void GameHandler::BeginCombat() {
     int turn = 0;
 
-    MonsterRoom* room = (MonsterRoom*)currentRoom;
+    MonsterRoom* room = (MonsterRoom*)curRoom;
 
     while (room->isMonsterAlive()) {
         printf("The monster's health is currently: [%d / %d]\n", room->getMonsterHealth(), room->getMonsterBaseHealth());
@@ -237,23 +243,29 @@ void GameHandler::BeginCombat() {
     // The Monster has been defeated, allow the player to move on.
     cout << "The " << room->getMonsterName() << " was defeated by " << playerController->getPlayerName() << " The Monk! \n The Monk moves on to the next room..." << endl;
     logs->printLogs("DEFEAT: Monster was defeated by player");
-    currentRoom->isRoomComplete = true;
+    curRoom->setRoomClear(true);
 
     MoveRoom();
 }
 
 void GameHandler::ExploreEmptyRoom() {
-    // Initialise the instruction to something other than the supported options, to enter the while loop
-    string instruction = "2";
+    // Initialise the "input" to contains user's input
+    int input = -1;
 
     // Keep asking the player for the correct instruction. Break out of the loop when it's a 0 or 1.
-    while (instruction != "0" && instruction != "1") {
-        cout << "\n What would you like to do? \n [0] = pray \n [1] = move on" << endl;
-        cin >> instruction;
-        if (instruction != "0" && instruction != "1") { cout << "Input unrecognised :( " << endl; }
+    cout << "\n What would you like to do? \n [0] = pray \n [1] = move on" << endl;
+    while (true) {
+        if (_kbhit()) {
+            input = toupper(_getch());
+
+            if (input == '0' || input == '1')
+                break;
+            else
+                cout << "Input unrecognised :( " << endl;
+        }
     }
 
-    if (instruction == "0") {
+    if (input == '0') {
         playerController->setPlayerHealth(playerController->getPlayerBaseHealth());
         logs->printLogs("Player prayed in empty room: restoring health");
         printf("Naturally, you sit inside the demonic-looking summoning circle. You're now full health! [%d / %d] \n",
@@ -261,21 +273,27 @@ void GameHandler::ExploreEmptyRoom() {
     }
 
     // Cast the current room to an EmptyRoom object.
-    EmptyRoom* room = (EmptyRoom*)currentRoom;
+    EmptyRoom* room = (EmptyRoom*)curRoom;
 
-    if (room->hasItem) {
+    if (room->Item()) {
         cout << "As " << playerController->getPlayerName() << " walks forward, they see a glisten in front of them." << endl;
         logs->printLogs("Generated item inside current room");
-        instruction = "2";
-        while (instruction != "0" && instruction != "1") {
-            cout << " What do you do? \n [0] = Pick Up \n [1] = Ignore" << endl;
+        cout << " What do you do? \n [0] = Pick Up \n [1] = Ignore" << endl;
 
-            cin >> instruction;
-            if (instruction != "0" && instruction != "1") cout << "The Monk didn't understand that!" << endl;
+        input = -1;
+        while (true) {
+            if (_kbhit()) {
+                input = toupper(_getch());
+
+                if (input == '0' || input == '1')
+                    break;
+                else
+                    cout << "The Monk didn't understand that!" << endl;
+            }
         }
 
-        if (instruction == "0") {
-            if (randomController->getRandomIndex(1, 100) < 21) {
+        if (input == '0') {
+            if (generateRand(1, 100) < 21) {
                 logs->printLogs("ITEM: Staff of Protection");
                 cout << "You approach the item and pick it up... It's a Staff of Protection! \n During your next combat, the Staff of Protection will block the first attack." << endl;
                 playerController->setPlayerProtection(true);
@@ -304,7 +322,7 @@ void GameHandler::MoveRoom() {
             logs->printLogs("Player did not provide a valid option - expected [0] || [1]");
         }
     }
-    GenerateRoom(currentRoom, direction);
+    GenerateRoom(curRoom, direction);
 }
 
 void GameHandler::CombatTryAttack(MonsterRoom* room, int turn) {
@@ -381,7 +399,7 @@ void GameHandler::CombatTryDefend(MonsterRoom* room, int turn) {
 
 void GameHandler::BeginPuzzle() {
     cout << "There seems to be spikes in the floor. If the answer is incorrect, face a painful punishment. If the answer is correct, accept a generous reward." << endl;
-    PuzzleRoom* room = (PuzzleRoom*)currentRoom;
+    PuzzleRoom* room = (PuzzleRoom*)curRoom;
 
     string instruction = "_";
 

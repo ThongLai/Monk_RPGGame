@@ -1,27 +1,17 @@
-//
-// Created by Mike on 18/03/2019.
-//
-
-#ifndef MONKASSIGNMENT_TREASUREROOM_H
-#define MONKASSIGNMENT_TREASUREROOM_H
+#pragma once
 
 #include "Room.h"
 
 class TreasureRoom : public Room {
+private:
+    bool isTreasureCollected;
 public:
-    TreasureRoom(Room *);
+    TreasureRoom();
 
-    void Generate() override;
-
-    void Render(string) override;
+    void Generate(int = 0);
+    void Render(string = "");
 
     bool isTreasureRoom() override { return true; }; // Tells the manager of the Room class that this is the treasure subclass.
 
-    bool isTreasureCollected;
-
     void TreasureCollected(string);
-
 };
-
-
-#endif //MONKASSIGNMENT_TREASUREROOM_H

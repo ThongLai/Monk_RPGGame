@@ -1,24 +1,18 @@
-//
-// Created by Mike on 09/03/2019.
-//
-#include <random>
-#include <iostream>
-#include <new>
 #include "MonsterRoom.h"
 
-MonsterRoom::MonsterRoom(Room *sender) : Room (sender){
+MonsterRoom::MonsterRoom() : Room("Monster Room") {
+    description = "Monster room, danger lurks. The monk must face a formidable creature in a fierce battle for survival.";
+}
 
+MonsterController* MonsterRoom::getMonster() {
+    return monster;
 }
 
 void MonsterRoom::Generate(int monsterId) {
     monster = new MonsterController(monsterId);
 }
 
-MonsterController *MonsterRoom::getMonster() {
-    return monster;
-}
-
-void MonsterRoom::Render() {
+void MonsterRoom::Render(string) {
     if(monster->getMonsterName() == "Goblin"){
         std::cout << "                   (    )\n"
                      "                  ((((()))\n"
@@ -133,7 +127,7 @@ void MonsterRoom::Render() {
                      "------------------------------------------------\n" << endl;
     }
 
-    cout << "You enter a dark room, you can hardly see. In front of you, you hear a " << monster->getMonsterNoise() << endl;
+    cout << description << monster->getMonsterNoise() << endl;
     cout << "It's a " << monster->getMonsterName() << "! The door behind you locks. The battle has already begun." << endl;
 }
 

@@ -7,6 +7,7 @@
 
 // Controller Dependencies
 #include "MonsterController.h"
+#include "PlayerController.h"
 #include "Logs.h"
 
 // Model Dependencies
@@ -17,7 +18,6 @@
 #include "MonsterRoom.h"
 #include "EmptyRoom.h"
 #include "TreasureRoom.h"
-#include "RandomController.h"
 #include "PuzzleRoom.h"
 
 class GameHandler {
@@ -26,7 +26,6 @@ private:
     PlayerController* playerController;
     MonsterModel* monsterModel;
     MonsterRoom* monsterRoom;
-    RandomController* randomController;
     int roomsExplored = 0;
 
     int treasureChance = 5;
@@ -34,7 +33,7 @@ private:
     int monsterChance = 58;
     int puzzleChance = 10;
 
-    Room* currentRoom;
+    Room* curRoom;
 
     //Timer indices
     clock_t START_TIME;

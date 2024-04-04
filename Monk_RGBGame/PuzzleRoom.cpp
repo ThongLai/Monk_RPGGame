@@ -1,27 +1,17 @@
-//
-// Created by Mike on 21/03/2019.
-//
-
-#include <iostream>
-#include <vector>
 #include "PuzzleRoom.h"
 
-PuzzleRoom::PuzzleRoom(Room *room) : Room(room){
+PuzzleRoom::PuzzleRoom() : Room("Puzzle Room") {
+    description = "In the puzzle room, the monk faces mind-bending challenges, testing their intellect and determination.";
 }
 
-//string riddles[] = {};
-
-vector <string> riddles;
-vector <string> answers;
-
-void PuzzleRoom::Generate() {
+void PuzzleRoom::Generate(int) {
     puzzleCompleted = false;
     SetRiddles();
     SetAnswers();
 }
 
-void PuzzleRoom::Render(string name) {
-    cout << name << " the Monk enters a very different-looking room. It seems to have egyptian symbols on the walls. It's a puzzle room!" << endl;
+void PuzzleRoom::Render(string) {
+    cout << description << endl;
 }
 
 int PuzzleRoom::getPuzzleSize() {

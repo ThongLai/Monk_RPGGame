@@ -1,23 +1,41 @@
-//
-// Created by Mike on 08/03/2019.
-//
-
 #include "Room.h"
 
-Room::Room(Room *sender) {
-    setEnteredFrom(sender);
+Room::Room(string type, bool isClear)
+{
+    this->type = type;
+    this->isClear = isClear;
 }
 
-void Room::setEnteredFrom(Room *previousRoom) {
-    enteredFrom = previousRoom;
+Room::~Room()
+{
+    delete leftDoor;
+    delete rightDoor;
 }
 
-Room* Room::getLeftRoom() {return leftDoor;}
+void Room::Generate(int)
+{
+}
 
-Room* Room::getRightRoom() {return rightDoor; }
+bool Room::isRoomClear()
+{
+    return isClear;
+}
+
+Room* Room::getLeftRoom() {
+    return leftDoor;
+}
+
+Room* Room::getRightRoom() {
+    return rightDoor; 
+}
 
 void Room::setLeftRoom(Room *left) {
     leftDoor = left;
+}
+
+void Room::setRoomClear(bool isClear)
+{
+    this->isClear = isClear;
 }
 
 void Room::setRightRoom(Room *right) {

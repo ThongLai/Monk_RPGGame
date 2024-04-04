@@ -1,13 +1,10 @@
-//
-// Created by Mike on 18/03/2019.
-//
-
-#include <iostream>
 #include "TreasureRoom.h"
 
-TreasureRoom::TreasureRoom(Room *room) : Room(room){  }
+TreasureRoom::TreasureRoom() : Room("Treasure Room") {  
+    description = "In the treasure room, the monk is surrounded by dazzling wealth and priceless artifacts, offering boundless opportunities for fortune and abundance.";
+}
 
-void TreasureRoom::Generate() {
+void TreasureRoom::Generate(int) {
     isTreasureCollected = false;
 }
 

@@ -1,1 +1,5 @@
-﻿  Monk_RGBGame.vcxproj -> D:\ThongLai\OneDrive - University of Huddersfield\Object-Oriented Systems Development\Assignment\Monk_RGBGame\Debug\Monk_RGBGame.exe
+﻿  GameHandler.cpp
+D:\ThongLai\OneDrive - University of Huddersfield\Object-Oriented Systems Development\Assignment\Monk_RGBGame\Monk_RGBGame\GameHandler.cpp(12,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  main.cpp
+  Generating Code...
+  Monk_RGBGame.vcxproj -> D:\ThongLai\OneDrive - University of Huddersfield\Object-Oriented Systems Development\Assignment\Monk_RGBGame\Debug\Monk_RGBGame.exe

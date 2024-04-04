@@ -122,6 +122,11 @@ void printMessCenter(string message, int text_color, int bg_color)
     cout << message;
 }
 
+int generateRand(int from, int to)
+{
+    return rand() % to + from;
+}
+
 //Sounds and Musics
 void SetAllVolumes(int volume)
 {

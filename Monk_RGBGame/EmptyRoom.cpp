@@ -1,23 +1,22 @@
-//
-// Created by Mike on 10/03/2019.
-//
-#include <iostream>
-#include <random>
 #include "EmptyRoom.h"
-using namespace std;
 
-EmptyRoom::EmptyRoom(Room *sender) : Room(sender)
+EmptyRoom::EmptyRoom() : Room("Empty Room")
 {
+    description = "As the monk enters the empty room, a calming presence fills the air. The room's peaceful atmosphere helps the monk regain their health and vitality.";
 }
 
 void EmptyRoom::Generate(int itemChance) {
-    this->hasPrayed = false;
-    // Set hasItem to true if rngItemGen returns less than 20, therefore making an item a 20% chance.
+    this->isPrayed = false;
+
+    // 20% chance to have an item
     hasItem = (itemChance < 20);
 }
 
-void EmptyRoom::Render() {
-    cout << "You enter a room. There's a dim light in front of you. There's a circle of "
-            "candles underneath the light. It looks important. ";
+void EmptyRoom::Render(string) {
+    cout << description;
+}
 
+bool EmptyRoom::Item()
+{
+    return hasItem;
 }

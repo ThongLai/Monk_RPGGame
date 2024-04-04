@@ -32,7 +32,6 @@
     <ClCompile Include="PlayerController.cpp" />
     <ClCompile Include="PlayerModel.cpp" />
     <ClCompile Include="PuzzleRoom.cpp" />
-    <ClCompile Include="RandomController.cpp" />
     <ClCompile Include="Room.cpp" />
     <ClCompile Include="TreasureRoom.cpp" />
   </ItemGroup>
@@ -50,7 +49,6 @@
     <ClInclude Include="PlayerController.h" />
     <ClInclude Include="PlayerModel.h" />
     <ClInclude Include="PuzzleRoom.h" />
-    <ClInclude Include="RandomController.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="TreasureRoom.h" />
   </ItemGroup>
