@@ -50,6 +50,12 @@ extern int STATUS_W;
 extern int SAVE_SIZE;
 extern int LEADERBOARD_SIZE;
 
+//Chances for rooms
+extern int TREASURE_ROOM_CHANCE;
+extern int PUZZLE_ROOM_CHANCE;
+extern int EMPTY_ROOM_CHANCE;
+extern int MONSTER_ROOM_CHANCE;
+
 // Set up when starting up functions
 void setRasterFonts();
 void SetWindowSize(int width, int height);

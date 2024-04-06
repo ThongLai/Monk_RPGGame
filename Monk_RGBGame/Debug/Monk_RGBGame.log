@@ -1,5 +1,5 @@
-﻿  GameHandler.cpp
-D:\ThongLai\OneDrive - University of Huddersfield\Object-Oriented Systems Development\Assignment\Monk_RGBGame\Monk_RGBGame\GameHandler.cpp(12,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-  main.cpp
-  Generating Code...
+﻿  CommonConfig.cpp
+D:\ThongLai\OneDrive - University of Huddersfield\Object-Oriented Systems Development\Assignment\Monk_RGBGame\Monk_RGBGame\CommonConfig.cpp(56,23): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+D:\ThongLai\OneDrive - University of Huddersfield\Object-Oriented Systems Development\Assignment\Monk_RGBGame\Monk_RGBGame\CommonConfig.cpp(58,48): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+D:\ThongLai\OneDrive - University of Huddersfield\Object-Oriented Systems Development\Assignment\Monk_RGBGame\Monk_RGBGame\CommonConfig.cpp(59,41): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
   Monk_RGBGame.vcxproj -> D:\ThongLai\OneDrive - University of Huddersfield\Object-Oriented Systems Development\Assignment\Monk_RGBGame\Debug\Monk_RGBGame.exe

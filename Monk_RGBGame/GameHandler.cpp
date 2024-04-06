@@ -39,11 +39,9 @@ void GameHandler::resetData()
 
     setPlayer(name, bio);
 
-    EmptyRoom spawnRoom;
-    spawnRoom.Generate(generateRand(1, 100));
-    spawnRoom.Render();
+    curRoom = new EmptyRoom;
+    curRoom->Render();
 
-    curRoom = &spawnRoom;
     logs->printLogs("Generated Empty Spawn Room.");
     ExploreEmptyRoom();
 
@@ -80,7 +78,7 @@ void GameHandler::setPlayer(string playerName, string description)
     logs->printLogs("Monk's description: " + description);
 }
 
-void GameHandler::GenerateRoom(Room* sender, string direction) {
+void GameHandler::GenerateNewRooms() {
     roomsExplored += 1;
 
     string log = "Generating new room... #";
@@ -95,71 +93,82 @@ void GameHandler::GenerateRoom(Room* sender, string direction) {
        the treasure room is found. This prevents the game from running for too long.
     */
     if (roomsExplored > 10) {
-        treasureChance = 40;
-        emptyChance = 13;
-        monsterChance = 47;
+        TREASURE_ROOM_CHANCE = TREASURE_ROOM_CHANCE + 35;
+        EMPTY_ROOM_CHANCE = EMPTY_ROOM_CHANCE - 14;
+        MONSTER_ROOM_CHANCE = 47;
         logs->printLogs("The Player has explored more than 10 rooms - increasing the chance of treasure rooms.");
     }
     else if (roomsExplored > 5) {
-        treasureChance = 15;
-        monsterChance = 55;
+        TREASURE_ROOM_CHANCE = 15;
+        MONSTER_ROOM_CHANCE = 55;
         logs->printLogs("The Player has explored more than 5 rooms - increasing the chance of treasure rooms slightly");
     }
-    int roomId = rngRoomId();
-    Room* newRoom;
 
     logs->printLogs("Generating new room....");
-    switch (roomId) {
-    default:
+    
+    int roomChance = generateRand(1, 100);
+    Room* leftRoom, * rightRoom;
+
+    if (roomChance < TREASURE_ROOM_CHANCE)
+        leftRoom = new TreasureRoom;
+    else if (roomChance < PUZZLE_ROOM_CHANCE)
+        leftRoom = new PuzzleRoom;
+    else if (roomChance < EMPTY_ROOM_CHANCE)
+        leftRoom = new EmptyRoom;
+    else
+        leftRoom = new MonsterRoom;
+
+    roomChance = generateRand(1, 100);
+    if (roomChance < TREASURE_ROOM_CHANCE)
+        rightRoom = new TreasureRoom;
+    else if (roomChance < PUZZLE_ROOM_CHANCE)
+        rightRoom = new PuzzleRoom;
+    else if (roomChance < EMPTY_ROOM_CHANCE)
+        rightRoom = new EmptyRoom;
+    else
+        rightRoom = new MonsterRoom;
+
+    curRoom->setLeftRoom(leftRoom);
+    curRoom->setRightRoom(rightRoom);
+}
+
+void GameHandler::MoveRoom() {
+    GenerateNewRooms();
+
+    int input = -1;
+
+    cout << "Which way does " << playerController->getPlayerName() << " go?\n [0] = Left \n [1] = Right \n";
+    while (true) {
+        if (_kbhit()) {
+            input = toupper(_getch());
+
+            if (input == '0' || input == '1')
+                break;
+            else
+                cout << "The Monk realises this isn't a direction..." << endl;
+        }
+    }
+
+    logs->printLogs("Go to next room");
+
+    curRoom = (input == '0') ? curRoom->getLeftRoom() : curRoom->getRightRoom();
+
+    switch (curRoom->getRoomId()) {
     case (0):
-        newRoom = new EmptyRoom;
-        newRoom->Generate(generateRand(1, 100));
-        newRoom->Render();
-
-        if (direction == "0") curRoom->setLeftRoom(newRoom);
-        else curRoom->setRightRoom(newRoom);
-
-        curRoom = newRoom;
-        logs->printLogs("Generated new Empty room");
+        curRoom->Render();
         ExploreEmptyRoom();
         break;
-    case (1): {
-        newRoom = new MonsterRoom;
-        newRoom->Generate(generateRand(0, 2));
-        newRoom->Render();
-
-        if (direction == "0") curRoom->setLeftRoom(newRoom);
-        else curRoom->setRightRoom(newRoom);
-
-        curRoom = newRoom;
-        logs->printLogs("Generated new Monster room");
+    case (1): 
+        curRoom->Render();
         BeginCombat();
         break;
-    }
-    case (2): {
-        TreasureRoom* treasureRoom = new TreasureRoom();
-        treasureRoom->Generate();
-
-        if (direction == "0") curRoom->setLeftRoom(treasureRoom);
-        else curRoom->setRightRoom(treasureRoom);
-
-        curRoom = treasureRoom;
-        treasureRoom->Render(playerController->getPlayerName());
-        logs->printLogs("Generated Treasure room!");
+    case (2): 
+        curRoom->Render(playerController->getPlayerName());
         break;
-    }
-    case (3): {
-        PuzzleRoom* puzzleRoom = new PuzzleRoom();
-        puzzleRoom->Generate();
-        puzzleRoom->Render(playerController->getPlayerName());
-        curRoom = puzzleRoom;
-
-        logs->printLogs("Generated Puzzle room!");
-        int puzzleId = generateRand(0, (puzzleRoom->getPuzzleSize() - 1));
-        puzzleRoom->setPuzzleId(puzzleId);
+    case (3): 
+        curRoom->Render(playerController->getPlayerName());
         BeginPuzzle();
         break;
-    }
     }
 }
 
@@ -172,22 +181,6 @@ void GameHandler::GenerateRoom(Room* sender, string direction) {
  *
  * @return The room ID which was generated here.
  */
-int GameHandler::rngRoomId() {
-    logs->printLogs("Choosing a random room ID from the percentage chances");
-    int roomChance = generateRand(1, 100);
-    if (roomChance < treasureChance) {
-        return 2;
-    }
-    else if (roomChance < puzzleChance) {
-        return 3;
-    }
-    else if (roomChance < emptyChance) {
-        return 0;
-    }
-    else {
-        return 1;
-    }
-}
 
 void GameHandler::BeginCombat() {
     int turn = 0;
@@ -310,20 +303,6 @@ void GameHandler::ExploreEmptyRoom() {
     MoveRoom();
 }
 
-void GameHandler::MoveRoom() {
-    string direction = "_";
-
-    // which direction will the player go?
-    while (direction != "0" && direction != "1") {
-        cout << "Which way does " << playerController->getPlayerName() << " go?\n [0] = Left \n [1] = Right \n";
-        cin >> direction;
-        if (direction != "0" && direction != "1") {
-            cout << "The Monk realises this isn't a direction..." << endl;
-            logs->printLogs("Player did not provide a valid option - expected [0] || [1]");
-        }
-    }
-    GenerateRoom(curRoom, direction);
-}
 
 void GameHandler::CombatTryAttack(MonsterRoom* room, int turn) {
     if (turn == 0) {

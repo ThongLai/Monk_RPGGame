@@ -11,6 +11,12 @@ int STATUS_W;
 int SAVE_SIZE;
 int LEADERBOARD_SIZE;
 
+// Default: 5/10/27/58
+int TREASURE_ROOM_CHANCE = 5;
+int PUZZLE_ROOM_CHANCE = 100;
+int EMPTY_ROOM_CHANCE = 27;
+int MONSTER_ROOM_CHANCE = 58;
+
 // Set up when starting up functions
 void setRasterFonts()
 {

@@ -28,11 +28,6 @@ private:
     MonsterRoom* monsterRoom;
     int roomsExplored = 0;
 
-    int treasureChance = 5;
-    int emptyChance = 27;
-    int monsterChance = 58;
-    int puzzleChance = 10;
-
     Room* curRoom;
 
     //Timer indices
@@ -57,12 +52,13 @@ public:
 
     void increaseRoomCount() { roomsExplored ++; }
     int getRoomCount() { return roomsExplored; }
-    void GenerateRoom(Room*, string);
+
+    void GenerateNewRooms();
+    void MoveRoom();
+
     void BeginCombat();
     void BeginPuzzle();
-    int rngRoomId();
     void ExploreEmptyRoom();
-    void MoveRoom();
     void CombatTryAttack(MonsterRoom*, int);
     void CombatTryDefend(MonsterRoom*, int);
 

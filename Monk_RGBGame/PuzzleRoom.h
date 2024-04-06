@@ -10,11 +10,8 @@ private:
     vector <string> answers;
 public:
     PuzzleRoom();
-
-    void Generate(int = 0);
+    
     void Render(string = "");
-
-    bool puzzleCompleted;
 
     int getPuzzleSize();
 

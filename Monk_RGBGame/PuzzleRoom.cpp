@@ -2,10 +2,7 @@
 
 PuzzleRoom::PuzzleRoom() : Room("Puzzle Room") {
     description = "In the puzzle room, the monk faces mind-bending challenges, testing their intellect and determination.";
-}
-
-void PuzzleRoom::Generate(int) {
-    puzzleCompleted = false;
+    puzzleId = generateRand(0, (riddles.size() - 1));
     SetRiddles();
     SetAnswers();
 }

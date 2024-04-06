@@ -1,11 +1,8 @@
 #include "TreasureRoom.h"
 
-TreasureRoom::TreasureRoom() : Room("Treasure Room") {  
+TreasureRoom::TreasureRoom(bool isTreasureCollected) : Room("Treasure Room") {
     description = "In the treasure room, the monk is surrounded by dazzling wealth and priceless artifacts, offering boundless opportunities for fortune and abundance.";
-}
-
-void TreasureRoom::Generate(int) {
-    isTreasureCollected = false;
+    this->isTreasureCollected = isTreasureCollected;
 }
 
 void TreasureRoom::Render(string playerName) {

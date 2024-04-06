@@ -7,10 +7,9 @@ class MonsterRoom : public Room {
 private:
     MonsterController* monster;
 public:
-    MonsterRoom();
+    MonsterRoom(int monsterId = generateRand(0, 2));
     MonsterController* getMonster();
 
-    void Generate(int = 0);
     void Render(string = "");
 
     bool isMonsterAlive();

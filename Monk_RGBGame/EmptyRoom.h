@@ -9,7 +9,6 @@ private:
 public:
     EmptyRoom();
 
-    void Generate(int = 0);
     void Render(string = "");
 
     bool Item();

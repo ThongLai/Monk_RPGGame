@@ -1,15 +1,12 @@
 #include "MonsterRoom.h"
 
-MonsterRoom::MonsterRoom() : Room("Monster Room") {
+MonsterRoom::MonsterRoom(int monsterId) : Room("Monster Room") {
     description = "Monster room, danger lurks. The monk must face a formidable creature in a fierce battle for survival.";
+    monster = new MonsterController(generateRand(0, 2));
 }
 
 MonsterController* MonsterRoom::getMonster() {
     return monster;
-}
-
-void MonsterRoom::Generate(int monsterId) {
-    monster = new MonsterController(monsterId);
 }
 
 void MonsterRoom::Render(string) {
