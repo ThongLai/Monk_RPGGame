@@ -161,7 +161,7 @@ void GameHandler::MoveRoom() {
     case (1): 
         curRoom->Render();
         BeginCombat();
-        break;
+        break; 
     case (2): 
         curRoom->Render(playerController->getPlayerName());
         break;
