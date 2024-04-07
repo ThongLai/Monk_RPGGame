@@ -10,18 +10,15 @@ private:
     vector <string> answers;
 public:
     PuzzleRoom();
-    
-    void Render(string = "");
 
     int getPuzzleSize();
-
     string getPuzzle();
-
     string getPuzzleAnswer();
 
-    void SetRiddles();
-
-    void SetAnswers();
-
+    void setRiddles();
+    void setAnswers();
     void setPuzzleId(int puzzleId);
+
+    void Render(string = "");
+    void processRoom(Player* player);
 };

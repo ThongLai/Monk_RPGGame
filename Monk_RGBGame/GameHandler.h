@@ -4,15 +4,11 @@
 #include "Menu.h"
 #include "ModelArts.h"
 #include "CommonConfig.h"
-
-// Controller Dependencies
-#include "MonsterController.h"
-#include "PlayerController.h"
 #include "Logs.h"
 
-// Model Dependencies
-#include "PlayerModel.h"
-#include "MonsterModel.h"
+// Entites Dependencies
+#include "Monster.h"
+#include "Player.h"
 
 // Room Dependencies
 #include "MonsterRoom.h"
@@ -22,13 +18,10 @@
 
 class GameHandler {
 private:
-    MonsterController* monsterController;
-    PlayerController* playerController;
-    MonsterModel* monsterModel;
-    MonsterRoom* monsterRoom;
-    int roomsExplored = 0;
-
+    Player* player;
     Room* curRoom;
+
+    int roomsExplored = 0;
 
     //Timer indices
     clock_t START_TIME;
@@ -40,15 +33,16 @@ private:
 
 public:
     GameHandler();
+    ~GameHandler();
+
     
     void StartUp(); //Set up when start up
     void init(); //Initialize important parameters in the game
     void resetData(); //Reset values all of the attributes
+    void deleteData();
 
     void resetGame(); //Operate the reset game process
-
-
-    void setPlayer(string playerName, string description);
+    void startGame(); 
 
     void increaseRoomCount() { roomsExplored ++; }
     int getRoomCount() { return roomsExplored; }
@@ -59,8 +53,8 @@ public:
     void BeginCombat();
     void BeginPuzzle();
     void ExploreEmptyRoom();
-    void CombatTryAttack(MonsterRoom*, int);
-    void CombatTryDefend(MonsterRoom*, int);
+    void CombatTryAttack(Monster*, int);
+    void CombatTryDefend(Monster*, int);
 
     void Main_Menu();
     void Settings_Menu();

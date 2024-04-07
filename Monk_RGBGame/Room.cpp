@@ -3,7 +3,6 @@
 Room::Room(string type, bool isClear)
 {
     this->type = type;
-    this->isClear = isClear;
 
     if (type == "Empty Room")
         this->id = 0;
@@ -21,11 +20,6 @@ Room::~Room()
     delete rightRoom;
 }
 
-bool Room::isRoomClear()
-{
-    return isClear;
-}
-
 int Room::getRoomId()
 {
     return id;
@@ -41,11 +35,6 @@ Room* Room::getRightRoom() {
 
 void Room::setLeftRoom(Room *left) {
     leftRoom = left;
-}
-
-void Room::setRoomClear(bool isClear)
-{
-    this->isClear = isClear;
 }
 
 void Room::setRightRoom(Room *right) {

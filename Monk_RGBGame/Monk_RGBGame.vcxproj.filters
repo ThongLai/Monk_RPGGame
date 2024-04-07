@@ -25,11 +25,14 @@
     <Filter Include="Source Files\Entities">
       <UniqueIdentifier>{e48d99e8-733d-4c60-8246-06a53ad55cc4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Display">
+      <UniqueIdentifier>{71a3d1e5-7b2b-4ac1-9761-05b3f93a6323}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Display">
+      <UniqueIdentifier>{144d56a5-13cd-4d30-883f-2303d35caf58}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Box.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="CommonConfig.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -40,12 +43,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Menu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ModelArts.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Room.cpp">
@@ -63,20 +60,23 @@
     <ClCompile Include="PuzzleRoom.cpp">
       <Filter>Source Files\Rooms</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerController.cpp">
+    <ClCompile Include="Player.cpp">
       <Filter>Source Files\Entities</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerModel.cpp">
+    <ClCompile Include="Monster.cpp">
       <Filter>Source Files\Entities</Filter>
     </ClCompile>
-    <ClCompile Include="MonsterController.cpp">
-      <Filter>Source Files\Entities</Filter>
+    <ClCompile Include="Menu.cpp">
+      <Filter>Source Files\Display</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelArts.cpp">
+      <Filter>Source Files\Display</Filter>
+    </ClCompile>
+    <ClCompile Include="Box.cpp">
+      <Filter>Source Files\Display</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Box.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CommonConfig.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -84,12 +84,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Logs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Menu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ModelArts.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Room.h">
@@ -107,17 +101,20 @@
     <ClInclude Include="PuzzleRoom.h">
       <Filter>Header Files\Rooms</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerModel.h">
+    <ClInclude Include="Player.h">
       <Filter>Header Files\Entities</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerController.h">
+    <ClInclude Include="Monster.h">
       <Filter>Header Files\Entities</Filter>
     </ClInclude>
-    <ClInclude Include="MonsterModel.h">
-      <Filter>Header Files\Entities</Filter>
+    <ClInclude Include="Box.h">
+      <Filter>Header Files\Display</Filter>
     </ClInclude>
-    <ClInclude Include="MonsterController.h">
-      <Filter>Header Files\Entities</Filter>
+    <ClInclude Include="Menu.h">
+      <Filter>Header Files\Display</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelArts.h">
+      <Filter>Header Files\Display</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

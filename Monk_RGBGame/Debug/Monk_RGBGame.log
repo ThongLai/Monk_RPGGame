@@ -1,5 +1,13 @@
-﻿  CommonConfig.cpp
-D:\ThongLai\OneDrive - University of Huddersfield\Object-Oriented Systems Development\Assignment\Monk_RGBGame\Monk_RGBGame\CommonConfig.cpp(56,23): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-D:\ThongLai\OneDrive - University of Huddersfield\Object-Oriented Systems Development\Assignment\Monk_RGBGame\Monk_RGBGame\CommonConfig.cpp(58,48): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-D:\ThongLai\OneDrive - University of Huddersfield\Object-Oriented Systems Development\Assignment\Monk_RGBGame\Monk_RGBGame\CommonConfig.cpp(59,41): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+﻿  EmptyRoom.cpp
+  GameHandler.cpp
+D:\ThongLai\OneDrive - University of Huddersfield\Object-Oriented Systems Development\Assignment\Monk_RGBGame\Monk_RGBGame\GameHandler.cpp(17,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  ModelArts.cpp
+D:\ThongLai\OneDrive - University of Huddersfield\Object-Oriented Systems Development\Assignment\Monk_RGBGame\Monk_RGBGame\ModelArts.cpp(25,13): warning C4018: '<': signed/unsigned mismatch
+  MonsterRoom.cpp
+  Player.cpp
+  PuzzleRoom.cpp
+  Room.cpp
+  TreasureRoom.cpp
+  main.cpp
+  Generating Code...
   Monk_RGBGame.vcxproj -> D:\ThongLai\OneDrive - University of Huddersfield\Object-Oriented Systems Development\Assignment\Monk_RGBGame\Debug\Monk_RGBGame.exe

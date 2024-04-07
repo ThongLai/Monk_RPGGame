@@ -7,6 +7,11 @@ GameHandler::GameHandler()
     init();
 }
 
+GameHandler::~GameHandler()
+{
+    deleteData();
+}
+
 void GameHandler::StartUp()
 {
     srand(time(NULL));
@@ -20,32 +25,21 @@ void GameHandler::StartUp()
 
 void GameHandler::init()
 {
-
-    logs = new Logs();
-
+    logs = new Logs;
     logs->clearLogs();
 }
 
-
 void GameHandler::resetData()
 {
-    string name, bio;
-
-    cout << "You're in a fractured reality. And a dungeon, don't forget that. Once you advance through a door, there's no going back. Good luck... \n \n Now that's over, what's your name?\n";
-    cin >> name;
-
-    std::cout << "The powerful Monk has established his name; " << name << " \n But what's his story? \n";
-    cin >> bio;
-
-    setPlayer(name, bio);
-
-    curRoom = new EmptyRoom;
-    curRoom->Render();
-
-    logs->printLogs("Generated Empty Spawn Room.");
-    ExploreEmptyRoom();
-
     //removeArts();
+
+    deleteData();
+
+    player = new Player;
+    curRoom = new EmptyRoom;
+
+    player->setPlayer();
+    logs->printLogs("Generated Empty Spawn Room.");
 
     //level = 0;
     //score = 0;
@@ -53,6 +47,7 @@ void GameHandler::resetData()
     START_TIME = clock() / CLOCKS_PER_SEC;
     TIME = 0;
     PAUSE_TIME = 0;
+
     //UnDeadCMD = false;
 
     //vans.clear();
@@ -63,6 +58,12 @@ void GameHandler::resetData()
     logs->clearLogs();
 }
 
+void GameHandler::deleteData()
+{
+    delete curRoom;
+    delete player;
+}
+
 void GameHandler::resetGame()
 {
     resetData();
@@ -70,12 +71,14 @@ void GameHandler::resetGame()
     init();
 }
 
-void GameHandler::setPlayer(string playerName, string description)
+void GameHandler::startGame()
 {
-    playerController = new PlayerController(3, playerName, description);
+    do
+    {
+        curRoom->Render();
+        curRoom->processRoom(player);
 
-    logs->printLogs("Monk created with name: " + playerName + " with a base health of 15, and a damage of 3.");
-    logs->printLogs("Monk's description: " + description);
+    } while (curRoom->getRoomId() == 2);
 }
 
 void GameHandler::GenerateNewRooms() {
@@ -85,7 +88,7 @@ void GameHandler::GenerateNewRooms() {
     log += to_string(roomsExplored);
     logs->printLogs(log);
 
-    cout << playerController->getPlayerName() << " The Monk has explored ";
+    cout << player->getName() << " The Monk has explored ";
     printf("%d room(s) in the dungeon. \n", roomsExplored);
     /*
        Set the chance of finding a treasure gradually higher, and the chance of finding an empty room to heal lower.
@@ -137,7 +140,7 @@ void GameHandler::MoveRoom() {
 
     int input = -1;
 
-    cout << "Which way does " << playerController->getPlayerName() << " go?\n [0] = Left \n [1] = Right \n";
+    cout << "Which way does " << player->getName() << " go?\n [0] = Left \n [1] = Right \n";
     while (true) {
         if (_kbhit()) {
             input = toupper(_getch());
@@ -161,12 +164,12 @@ void GameHandler::MoveRoom() {
     case (1): 
         curRoom->Render();
         BeginCombat();
-        break; 
+        break;
     case (2): 
-        curRoom->Render(playerController->getPlayerName());
+        curRoom->Render(player->getName());
         break;
     case (3): 
-        curRoom->Render(playerController->getPlayerName());
+        curRoom->Render(player->getName());
         BeginPuzzle();
         break;
     }
@@ -186,16 +189,17 @@ void GameHandler::BeginCombat() {
     int turn = 0;
 
     MonsterRoom* room = (MonsterRoom*)curRoom;
+    Monster* monster = room->getMonster();
 
     while (room->isMonsterAlive()) {
-        printf("The monster's health is currently: [%d / %d]\n", room->getMonsterHealth(), room->getMonsterBaseHealth());
-        printf("The Monk's Health is currently: [%d / %d]\n", playerController->getPlayerHealth(), playerController->getPlayerBaseHealth());
+        printf("The monster's health is currently: [%d / %d]\n", monster->getHealth(), monster->getBaseHealth());
+        printf("The Monk's Health is currently: [%d / %d]\n", player->getHealth(), PLAYER_BASE_HEALTH);
         string log = "The Monk's health is currently: ";
-        log += to_string(playerController->getPlayerHealth());
+        log += to_string(player->getHealth());
 
         logs->printLogs(log);
         log = "The Monster's health is currently: ";
-        log += to_string(room->getMonsterHealth());
+        log += to_string(monster->getHealth());
 
         logs->printLogs(log);
         if (turn == 0) {
@@ -210,23 +214,23 @@ void GameHandler::BeginCombat() {
             }
 
             if (instruction == "0") {
-                CombatTryAttack(room, turn);
+                CombatTryAttack(monster, turn);
             }
             else {
-                CombatTryDefend(room, turn);
+                CombatTryDefend(monster, turn);
             }
 
             turn = 1; // Set the turn to the monster.
         }
         else {
 
-            if (room->monsterActionToPerform() == 0) {
-                CombatTryAttack(room, turn);
+            if (monster->actionToPerform() == 0) {
+                CombatTryAttack(monster, turn);
             }
             else {
-                CombatTryDefend(room, turn);
+                CombatTryDefend(monster, turn);
             }
-            if (room->monsterTryAction()) { // Tries to attack or defend
+            if (monster->tryAction()) { // Tries to attack or defend
 
             }
             turn = 0; // Set the turn back to the player.
@@ -234,9 +238,8 @@ void GameHandler::BeginCombat() {
     }
 
     // The Monster has been defeated, allow the player to move on.
-    cout << "The " << room->getMonsterName() << " was defeated by " << playerController->getPlayerName() << " The Monk! \n The Monk moves on to the next room..." << endl;
+    cout << "The " << monster->getName() << " was defeated by " << player->getName() << " The Monk! \n The Monk moves on to the next room..." << endl;
     logs->printLogs("DEFEAT: Monster was defeated by player");
-    curRoom->setRoomClear(true);
 
     MoveRoom();
 }
@@ -259,17 +262,17 @@ void GameHandler::ExploreEmptyRoom() {
     }
 
     if (input == '0') {
-        playerController->setPlayerHealth(playerController->getPlayerBaseHealth());
+        player->setHealth(PLAYER_BASE_HEALTH);
         logs->printLogs("Player prayed in empty room: restoring health");
         printf("Naturally, you sit inside the demonic-looking summoning circle. You're now full health! [%d / %d] \n",
-            playerController->getPlayerHealth(), playerController->getPlayerBaseHealth());
+            player->getHealth(), PLAYER_BASE_HEALTH);
     }
 
     // Cast the current room to an EmptyRoom object.
     EmptyRoom* room = (EmptyRoom*)curRoom;
 
     if (room->Item()) {
-        cout << "As " << playerController->getPlayerName() << " walks forward, they see a glisten in front of them." << endl;
+        cout << "As " << player->getName() << " walks forward, they see a glisten in front of them." << endl;
         logs->printLogs("Generated item inside current room");
         cout << " What do you do? \n [0] = Pick Up \n [1] = Ignore" << endl;
 
@@ -289,88 +292,87 @@ void GameHandler::ExploreEmptyRoom() {
             if (generateRand(1, 100) < 21) {
                 logs->printLogs("ITEM: Staff of Protection");
                 cout << "You approach the item and pick it up... It's a Staff of Protection! \n During your next combat, the Staff of Protection will block the first attack." << endl;
-                playerController->setPlayerProtection(true);
+                player->setHasProtection(true);
             }
             else {
                 logs->printLogs("ITEM: sewing needle; subtracting player health");
                 cout << "You approach the item and pick it up... OUCH! It was a sewing needle! \n You lose 1 HP. :( " << endl;
-                playerController->subtractPlayerHealth(1);
+                player->takeDamage(1);
             }
         }
     }
 
-    cout << playerController->getPlayerName() << " the Monk moves on to the next room..." << endl;
+    cout << player->getName() << " the Monk moves on to the next room..." << endl;
     MoveRoom();
 }
 
-
-void GameHandler::CombatTryAttack(MonsterRoom* room, int turn) {
+void GameHandler::CombatTryAttack(Monster* monster, int turn) {
     if (turn == 0) {
-        if (playerController->tryAction()) {
-            cout << playerController->getPlayerName() << " the Monk attacks the " << room->getMonsterName() << "!" << endl;
+        if (player->tryAction()) {
+            cout << player->getName() << " the Monk attacks the " << monster->getName() << "!" << endl;
             logs->printLogs("ATTACK: The monk successfully attacked the monster");
-            room->subtractMonsterHealth(playerController->getPlayerDamage());
+            monster->takeDamage(player->getDamage());
         }
         else {
-            cout << "The " << room->getMonsterName() << " dodged " << playerController->getPlayerName() << "'s attack!" << endl;
+            cout << "The " << monster->getName() << " dodged " << player->getName() << "'s attack!" << endl;
             logs->printLogs("ATTACK FAILED: The monk failed to attack the monster");
         }
     }
     else {
-        if (room->monsterTryAction()) {
-            if (playerController->playerHasProtection()) {
-                cout << "\n The " << room->getMonsterName() << " tried to attack, but the Staff of Protection blocked the attack from the " << room->getMonsterName() << "!" << endl;
+        if (monster->tryAction()) {
+            if (player->hasProtection()) {
+                cout << "\n The " << monster->getName() << " tried to attack, but the Staff of Protection blocked the attack from the " << monster->getName() << "!" << endl;
                 logs->printLogs("ATTACK BLOCKED: Player had Staff of Protection item");
-                playerController->setPlayerProtection(false);
+                player->setHasProtection(false);
             }
             else {
-                cout << "\nThe " << room->getMonsterName() << " strikes " << playerController->getPlayerName() << " the Monk! OUCH!" << endl;
+                cout << "\nThe " << monster->getName() << " strikes " << player->getName() << " the Monk! OUCH!" << endl;
                 logs->printLogs("ATTACK: The monster attacked the player - the player had no Protection items");
-                playerController->subtractPlayerHealth(room->getMonsterAttackPoints());
+                player->takeDamage(monster->getDamage());
             }
         }
         else {
-            cout << "\nThe " << room->getMonsterName() << " failed to attack " << playerController->getPlayerName() << " the Monk!" << endl;
+            cout << "\nThe " << monster->getName() << " failed to attack " << player->getName() << " the Monk!" << endl;
             logs->printLogs("ATTACK FAILED: Monster failed to attack player!");
         }
     }
 }
 
-void GameHandler::CombatTryDefend(MonsterRoom* room, int turn) {
+void GameHandler::CombatTryDefend(Monster* monster, int turn) {
     if (turn == 0) {
-        if (playerController->tryAction()) {
+        if (player->tryAction()) {
             cout << endl;
-            cout << playerController->getPlayerName() << " the Monk defends themselves against the monster, restoring 1 HP." << endl;
+            cout << player->getName() << " the Monk defends themselves against the monster, restoring 1 HP." << endl;
             logs->printLogs("DEFEND: The Monk successfully defended, gaining 1 HP.");
             // If the player does not have max health, increase it by 1. Otherwise, move on.
-            if (playerController->getPlayerHealth() != playerController->getPlayerBaseHealth())
-                playerController->setPlayerHealth(playerController->getPlayerHealth() + 1);
+            if (player->getHealth() != PLAYER_BASE_HEALTH)
+                player->setHealth(player->getHealth() + 1);
             else logs->printLogs("DEFEND: Failed to increase health: Health was already max!");
         }
         else {
             cout << endl;
-            cout << playerController->getPlayerName() << " the Monk failed to defend against the " << room->getMonsterName() << endl;
-            cout << "The " << room->getMonsterName() << " dealt ";
-            printf("%d damage!\n", room->getMonsterAttackPoints());
+            cout << player->getName() << " the Monk failed to defend against the " << monster->getName() << endl;
+            cout << "The " << monster->getName() << " dealt ";
+            printf("%d damage!\n", monster->getDamage());
             logs->printLogs("DEFEND FAILED: The Monk failed to defend against the monster - taking health away");
-            playerController->subtractPlayerHealth(room->getMonsterAttackPoints());
+            player->takeDamage(monster->getDamage());
         }
     }
     else {
-        if (room->monsterTryAction()) {
-            if (room->getMonsterHealth() != room->getMonsterBaseHealth()) {
-                room->setMonsterHealth(room->getMonsterHealth() + 1);
-                cout << "\nThe " << room->getMonsterName() << " defended against " << playerController->getPlayerName() << " the Monk and gained +1 health." << endl;
+        if (monster->tryAction()) {
+            if (monster->getHealth() != monster->getBaseHealth()) {
+                monster->setHealth(monster->getHealth() + 1);
+                cout << "\nThe " << monster->getName() << " defended against " << player->getName() << " the Monk and gained +1 health." << endl;
                 logs->printLogs("DEFEND: Monster defended against player");
             }
             else {
-                cout << "\nThe " << room->getMonsterName() << " defended itself, but was already full health." << endl;
+                cout << "\nThe " << monster->getName() << " defended itself, but was already full health." << endl;
                 logs->printLogs("DEFEND: Monster defended against the player [Full health]");
             }
         }
         else {
-            room->subtractMonsterHealth(playerController->getPlayerDamage());
-            cout << "\nThe " << room->getMonsterName() << " failed to defend itself, and " << playerController->getPlayerName() << " exploited this!" << endl;
+            monster->takeDamage(player->getDamage());
+            cout << "\nThe " << monster->getName() << " failed to defend itself, and " << player->getName() << " exploited this!" << endl;
             logs->printLogs("DEFEND FAILED: Monster failed to defend itself");
         }
     }
@@ -383,9 +385,9 @@ void GameHandler::BeginPuzzle() {
     string instruction = "_";
 
     while (instruction != "0" && instruction != "1") {
-        cout << "Does " << playerController->getPlayerName() << " the Monk accept the challenge? \n [0] = Yes \n [1] = No" << endl;
+        cout << "Does " << player->getName() << " the Monk accept the challenge? \n [0] = Yes \n [1] = No" << endl;
         cin >> instruction;
-        if (instruction != "0" && instruction != "1") cout << playerController->getPlayerName() << " realised this wasn't an option!";
+        if (instruction != "0" && instruction != "1") cout << player->getName() << " realised this wasn't an option!";
     }
 
     if (instruction == "0") {
@@ -400,22 +402,22 @@ void GameHandler::BeginPuzzle() {
         cin >> answer;
 
         if (answer == room->getPuzzleAnswer()) {
-            cout << "The walls begin to change. The symbols fade away. " << playerController->getPlayerName() << " answered correctly!" << endl;
-            cout << "As the symbols fade, a hole in the wall reveals a Staff of Protection. " << playerController->getPlayerName() << " picks it up!" << endl;
+            cout << "The walls begin to change. The symbols fade away. " << player->getName() << " answered correctly!" << endl;
+            cout << "As the symbols fade, a hole in the wall reveals a Staff of Protection. " << player->getName() << " picks it up!" << endl;
             cout << "During the next battle, the first attack from a monster will be blocked!" << endl;
 
             logs->printLogs("The answer was correct");
-            playerController->setPlayerProtection(true);
+            player->setHasProtection(true);
         }
         else {
-            playerController->subtractPlayerHealth(5);
-            cout << "The walls begin to change. The symbols fade away. The floor begins to shake. " << playerController->getPlayerName() << " answered incorrectly!" << endl;
-            printf("The Monk loses 5 HP for their mistake. [%d / %d] \n", playerController->getPlayerHealth(), playerController->getPlayerBaseHealth());
+            player->takeDamage(5);
+            cout << "The walls begin to change. The symbols fade away. The floor begins to shake. " << player->getName() << " answered incorrectly!" << endl;
+            printf("The Monk loses 5 HP for their mistake. [%d / %d] \n", player->getHealth(), PLAYER_BASE_HEALTH);
             logs->printLogs("Player answered incorrectly - subtracting 5 HP from the player");
         }
     }
 
-    cout << playerController->getPlayerName() << " moves on to the next room..." << endl;
+    cout << player->getName() << " moves on to the next room..." << endl;
 
     MoveRoom();
 }
@@ -455,7 +457,7 @@ void GameHandler::Main_Menu()
             mciSendString(TEXT("stop Menu_Theme"), NULL, 0, NULL);
             mciSendString(TEXT("play Gameplay_Theme from 0 repeat"), NULL, 0, NULL);
 
-            //game.resumeThread();
+            startGame();
 
             break;
         }

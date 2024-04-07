@@ -1,26 +1,19 @@
 #pragma once
 
 #include "Room.h"
-#include "MonsterController.h"
+#include "Monster.h"
 
 class MonsterRoom : public Room {
 private:
-    MonsterController* monster;
+    Monster* monster;
 public:
     MonsterRoom(int monsterId = generateRand(0, 2));
-    MonsterController* getMonster();
+    Monster* getMonster();
+    bool isMonsterAlive();
+
+    void CombatTryAttack(Player* player, int turn);
+    void CombatTryDefend(Player* player, int turn);
 
     void Render(string = "");
-
-    bool isMonsterAlive();
-    // Methods from the MonsterController
-    int getMonsterHealth();
-    int getMonsterBaseHealth();
-    string getMonsterName();
-    string getMonsterNoise();
-    void setMonsterHealth(int value);
-    void subtractMonsterHealth(int value);
-    int getMonsterAttackPoints();
-    bool monsterTryAction();
-    int monsterActionToPerform();
+    void processRoom(Player* player);
 };

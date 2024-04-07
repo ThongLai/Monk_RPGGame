@@ -27,10 +27,9 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="ModelArts.cpp" />
-    <ClCompile Include="MonsterController.cpp" />
+    <ClCompile Include="Monster.cpp" />
     <ClCompile Include="MonsterRoom.cpp" />
-    <ClCompile Include="PlayerController.cpp" />
-    <ClCompile Include="PlayerModel.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="PuzzleRoom.cpp" />
     <ClCompile Include="Room.cpp" />
     <ClCompile Include="TreasureRoom.cpp" />
@@ -43,11 +42,9 @@
     <ClInclude Include="Logs.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="ModelArts.h" />
-    <ClInclude Include="MonsterController.h" />
-    <ClInclude Include="MonsterModel.h" />
+    <ClInclude Include="Monster.h" />
     <ClInclude Include="MonsterRoom.h" />
-    <ClInclude Include="PlayerController.h" />
-    <ClInclude Include="PlayerModel.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="PuzzleRoom.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="TreasureRoom.h" />

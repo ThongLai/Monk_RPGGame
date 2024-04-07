@@ -9,7 +9,9 @@ private:
 public:
     EmptyRoom();
 
-    void Render(string = "");
-
     bool Item();
+
+    void processRoom(Player* player);
+
+    void Render(string = "");
 };

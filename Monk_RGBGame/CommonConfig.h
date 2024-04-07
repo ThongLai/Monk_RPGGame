@@ -8,7 +8,6 @@
 #include <stdio.h>
 #include <vector>
 
-//#include <random>
 using namespace std;
 #pragma comment(lib, "Winmm.lib")
 
@@ -38,7 +37,7 @@ using namespace std;
 #define YELLOW			14
 #define WHITE			15
 
-// Parameters for Gameplay
+// Gameplay Parameters
 extern int SCREEN_WIDTH_PXL;
 extern int SCREEN_HEIGHT_PXL;
 
@@ -50,11 +49,15 @@ extern int STATUS_W;
 extern int SAVE_SIZE;
 extern int LEADERBOARD_SIZE;
 
-//Chances for rooms
+//Rooms Chances
 extern int TREASURE_ROOM_CHANCE;
 extern int PUZZLE_ROOM_CHANCE;
 extern int EMPTY_ROOM_CHANCE;
 extern int MONSTER_ROOM_CHANCE;
+
+//Entities Parameters
+extern int PLAYER_BASE_HEALTH;
+extern int PLAYER_BASE_DAMAGE;
 
 // Set up when starting up functions
 void setRasterFonts();
