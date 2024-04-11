@@ -25,8 +25,6 @@ void GameHandler::StartUp()
 
 void GameHandler::init()
 {
-    logs = new Logs;
-    logs->clearLogs();
 }
 
 void GameHandler::resetData()
@@ -39,7 +37,6 @@ void GameHandler::resetData()
     curRoom = new EmptyRoom;
 
     player->setPlayer();
-    logs->printLogs("Generated Empty Spawn Room.");
 
     //level = 0;
     //score = 0;
@@ -54,8 +51,6 @@ void GameHandler::resetData()
     //cars.clear();
     //birds.clear();
     //aliens.clear();
-
-    logs->clearLogs();
 }
 
 void GameHandler::deleteData()
@@ -84,12 +79,10 @@ void GameHandler::startGame()
 void GameHandler::GenerateNewRooms() {
     roomsExplored += 1;
 
-    string log = "Generating new room... #";
-    log += to_string(roomsExplored);
-    logs->printLogs(log);
+    printMessCenter("Generating new room... ");
 
-    cout << player->getName() << " The Monk has explored ";
-    printf("%d room(s) in the dungeon. \n", roomsExplored);
+    cout << player->getName() << " The Monk has explored " << roomsExplored << " room(s) in the dungeon.\n";
+
     /*
        Set the chance of finding a treasure gradually higher, and the chance of finding an empty room to heal lower.
        This behaviour should encourage an end-game. Whether it be defeat due to a lower chance of healing, or win if
@@ -99,15 +92,15 @@ void GameHandler::GenerateNewRooms() {
         TREASURE_ROOM_CHANCE = TREASURE_ROOM_CHANCE + 35;
         EMPTY_ROOM_CHANCE = EMPTY_ROOM_CHANCE - 14;
         MONSTER_ROOM_CHANCE = 47;
-        logs->printLogs("The Player has explored more than 10 rooms - increasing the chance of treasure rooms.");
+        cout << "The Player has explored more than 10 rooms - increasing the chance of treasure rooms.";
     }
     else if (roomsExplored > 5) {
         TREASURE_ROOM_CHANCE = 15;
         MONSTER_ROOM_CHANCE = 55;
-        logs->printLogs("The Player has explored more than 5 rooms - increasing the chance of treasure rooms slightly");
+        cout << "The Player has explored more than 5 rooms - increasing the chance of treasure rooms slightly";
     }
 
-    logs->printLogs("Generating new room....");
+    cout << "Generating new room....";
     
     int roomChance = generateRand(1, 100);
     Room* leftRoom, * rightRoom;
@@ -152,7 +145,7 @@ void GameHandler::MoveRoom() {
         }
     }
 
-    logs->printLogs("Go to next room");
+    cout << "Go to next room";
 
     curRoom = (input == '0') ? curRoom->getLeftRoom() : curRoom->getRightRoom();
 
@@ -197,11 +190,11 @@ void GameHandler::BeginCombat() {
         string log = "The Monk's health is currently: ";
         log += to_string(player->getHealth());
 
-        logs->printLogs(log);
+        cout << log;
         log = "The Monster's health is currently: ";
         log += to_string(monster->getHealth());
 
-        logs->printLogs(log);
+        cout << log;
         if (turn == 0) {
             string instruction = "2";
 
@@ -239,7 +232,7 @@ void GameHandler::BeginCombat() {
 
     // The Monster has been defeated, allow the player to move on.
     cout << "The " << monster->getName() << " was defeated by " << player->getName() << " The Monk! \n The Monk moves on to the next room..." << endl;
-    logs->printLogs("DEFEAT: Monster was defeated by player");
+    cout << "DEFEAT: Monster was defeated by player";
 
     MoveRoom();
 }
@@ -263,7 +256,7 @@ void GameHandler::ExploreEmptyRoom() {
 
     if (input == '0') {
         player->setHealth(PLAYER_BASE_HEALTH);
-        logs->printLogs("Player prayed in empty room: restoring health");
+        cout << "Player prayed in empty room: restoring health";
         printf("Naturally, you sit inside the demonic-looking summoning circle. You're now full health! [%d / %d] \n",
             player->getHealth(), PLAYER_BASE_HEALTH);
     }
@@ -273,7 +266,7 @@ void GameHandler::ExploreEmptyRoom() {
 
     if (room->Item()) {
         cout << "As " << player->getName() << " walks forward, they see a glisten in front of them." << endl;
-        logs->printLogs("Generated item inside current room");
+        cout << "Generated item inside current room";
         cout << " What do you do? \n [0] = Pick Up \n [1] = Ignore" << endl;
 
         input = -1;
@@ -290,12 +283,12 @@ void GameHandler::ExploreEmptyRoom() {
 
         if (input == '0') {
             if (generateRand(1, 100) < 21) {
-                logs->printLogs("ITEM: Staff of Protection");
+                cout << "ITEM: Staff of Protection";
                 cout << "You approach the item and pick it up... It's a Staff of Protection! \n During your next combat, the Staff of Protection will block the first attack." << endl;
                 player->setHasProtection(true);
             }
             else {
-                logs->printLogs("ITEM: sewing needle; subtracting player health");
+                cout << "ITEM: sewing needle; subtracting player health";
                 cout << "You approach the item and pick it up... OUCH! It was a sewing needle! \n You lose 1 HP. :( " << endl;
                 player->takeDamage(1);
             }
@@ -310,30 +303,30 @@ void GameHandler::CombatTryAttack(Monster* monster, int turn) {
     if (turn == 0) {
         if (player->tryAction()) {
             cout << player->getName() << " the Monk attacks the " << monster->getName() << "!" << endl;
-            logs->printLogs("ATTACK: The monk successfully attacked the monster");
+            cout << "ATTACK: The monk successfully attacked the monster";
             monster->takeDamage(player->getDamage());
         }
         else {
             cout << "The " << monster->getName() << " dodged " << player->getName() << "'s attack!" << endl;
-            logs->printLogs("ATTACK FAILED: The monk failed to attack the monster");
+            cout << "ATTACK FAILED: The monk failed to attack the monster";
         }
     }
     else {
         if (monster->tryAction()) {
             if (player->hasProtection()) {
                 cout << "\n The " << monster->getName() << " tried to attack, but the Staff of Protection blocked the attack from the " << monster->getName() << "!" << endl;
-                logs->printLogs("ATTACK BLOCKED: Player had Staff of Protection item");
+                cout << "ATTACK BLOCKED: Player had Staff of Protection item";
                 player->setHasProtection(false);
             }
             else {
                 cout << "\nThe " << monster->getName() << " strikes " << player->getName() << " the Monk! OUCH!" << endl;
-                logs->printLogs("ATTACK: The monster attacked the player - the player had no Protection items");
+                cout << "ATTACK: The monster attacked the player - the player had no Protection items";
                 player->takeDamage(monster->getDamage());
             }
         }
         else {
             cout << "\nThe " << monster->getName() << " failed to attack " << player->getName() << " the Monk!" << endl;
-            logs->printLogs("ATTACK FAILED: Monster failed to attack player!");
+            cout << "ATTACK FAILED: Monster failed to attack player!";
         }
     }
 }
@@ -343,18 +336,18 @@ void GameHandler::CombatTryDefend(Monster* monster, int turn) {
         if (player->tryAction()) {
             cout << endl;
             cout << player->getName() << " the Monk defends themselves against the monster, restoring 1 HP." << endl;
-            logs->printLogs("DEFEND: The Monk successfully defended, gaining 1 HP.");
+            cout << "DEFEND: The Monk successfully defended, gaining 1 HP.";
             // If the player does not have max health, increase it by 1. Otherwise, move on.
             if (player->getHealth() != PLAYER_BASE_HEALTH)
                 player->setHealth(player->getHealth() + 1);
-            else logs->printLogs("DEFEND: Failed to increase health: Health was already max!");
+            else cout << "DEFEND: Failed to increase health: Health was already max!";
         }
         else {
             cout << endl;
             cout << player->getName() << " the Monk failed to defend against the " << monster->getName() << endl;
             cout << "The " << monster->getName() << " dealt ";
             printf("%d damage!\n", monster->getDamage());
-            logs->printLogs("DEFEND FAILED: The Monk failed to defend against the monster - taking health away");
+            cout << "DEFEND FAILED: The Monk failed to defend against the monster - taking health away";
             player->takeDamage(monster->getDamage());
         }
     }
@@ -363,17 +356,17 @@ void GameHandler::CombatTryDefend(Monster* monster, int turn) {
             if (monster->getHealth() != monster->getBaseHealth()) {
                 monster->setHealth(monster->getHealth() + 1);
                 cout << "\nThe " << monster->getName() << " defended against " << player->getName() << " the Monk and gained +1 health." << endl;
-                logs->printLogs("DEFEND: Monster defended against player");
+                cout << "DEFEND: Monster defended against player";
             }
             else {
                 cout << "\nThe " << monster->getName() << " defended itself, but was already full health." << endl;
-                logs->printLogs("DEFEND: Monster defended against the player [Full health]");
+                cout << "DEFEND: Monster defended against the player [Full health]";
             }
         }
         else {
             monster->takeDamage(player->getDamage());
             cout << "\nThe " << monster->getName() << " failed to defend itself, and " << player->getName() << " exploited this!" << endl;
-            logs->printLogs("DEFEND FAILED: Monster failed to defend itself");
+            cout << "DEFEND FAILED: Monster failed to defend itself";
         }
     }
 }
@@ -391,13 +384,13 @@ void GameHandler::BeginPuzzle() {
     }
 
     if (instruction == "0") {
-        logs->printLogs("The player chose to answer the question. The question was: ");
-        logs->printLogs(room->getPuzzle());
+        cout << "The player chose to answer the question. The question was: ";
+        cout << room->getPuzzle();
         cout << "The Egyptian writing reads: \n" << endl;
         cout << room->getPuzzle() << endl;
 
-        logs->printLogs("The answer is: ");
-        logs->printLogs(room->getPuzzleAnswer());
+        cout << "The answer is: ";
+        cout << room->getPuzzleAnswer();
         string answer;
         cin >> answer;
 
@@ -406,14 +399,14 @@ void GameHandler::BeginPuzzle() {
             cout << "As the symbols fade, a hole in the wall reveals a Staff of Protection. " << player->getName() << " picks it up!" << endl;
             cout << "During the next battle, the first attack from a monster will be blocked!" << endl;
 
-            logs->printLogs("The answer was correct");
+            cout << "The answer was correct";
             player->setHasProtection(true);
         }
         else {
             player->takeDamage(5);
             cout << "The walls begin to change. The symbols fade away. The floor begins to shake. " << player->getName() << " answered incorrectly!" << endl;
             printf("The Monk loses 5 HP for their mistake. [%d / %d] \n", player->getHealth(), PLAYER_BASE_HEALTH);
-            logs->printLogs("Player answered incorrectly - subtracting 5 HP from the player");
+            cout << "Player answered incorrectly - subtracting 5 HP from the player";
         }
     }
 
@@ -434,7 +427,7 @@ void GameHandler::Main_Menu()
         system("cls");
 
         //Draw tiltle
-        drawArt(title, title_height, midWidth(SCREEN_WIDTH, title_width), midHeight(SCREEN_HEIGHT / 2, title_height), rand() % (15) + 1);
+        drawArt(title, title_height, midWidth(SCREEN_WIDTH, title_width), midHeight(SCREEN_HEIGHT / 2, title_height));
 
         MainMenu.printMenu();
 

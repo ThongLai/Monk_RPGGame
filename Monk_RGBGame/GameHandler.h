@@ -4,7 +4,6 @@
 #include "Menu.h"
 #include "ModelArts.h"
 #include "CommonConfig.h"
-#include "Logs.h"
 
 // Entites Dependencies
 #include "Monster.h"
@@ -27,9 +26,6 @@ private:
     clock_t START_TIME;
     clock_t TIME;
     clock_t PAUSE_TIME;
-
-    //Logs modifier
-    Logs* logs;
 
 public:
     GameHandler();

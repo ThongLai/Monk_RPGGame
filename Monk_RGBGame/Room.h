@@ -2,6 +2,7 @@
 
 #include "CommonConfig.h"
 #include "Player.h"
+#include "Menu.h"
 
 class Room {
 private:

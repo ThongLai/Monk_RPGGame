@@ -112,6 +112,15 @@ bool GetColor(int& color) {
     color = info.wAttributes;
     return true;
 }
+
+int generateRand(int from, int to)
+{
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<int> dis(from, to);
+
+    return dis(gen);
+}
 int midWidth(int width, string message)
 {
     return (int)(width - message.size()) / 2;
@@ -124,6 +133,16 @@ int midHeight(int height, int content_height)
 {
     return (height - content_height) / 2;
 }
+
+void printMess(string message, int X, int Y, int text_color, int bg_color)
+{
+    Status SavedStatus;
+    SetTextColor(DefineColor(text_color, bg_color));
+
+    GotoXY(X, Y);
+    cout << message;
+}
+
 void printMessCenter(string message, int text_color, int bg_color)
 {
     Status SavedStatus;
@@ -131,11 +150,6 @@ void printMessCenter(string message, int text_color, int bg_color)
 
     GotoXY(midWidth(SCREEN_WIDTH, message), midHeight(SCREEN_HEIGHT, 1));
     cout << message;
-}
-
-int generateRand(int from, int to)
-{
-    return rand() % to + from;
 }
 
 //Sounds and Musics

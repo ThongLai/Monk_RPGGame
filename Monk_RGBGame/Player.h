@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CommonConfig.h"
+#include "Box.h"
 
 class Player {
 private:

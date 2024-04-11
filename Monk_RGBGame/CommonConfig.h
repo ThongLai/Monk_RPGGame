@@ -7,6 +7,7 @@
 #include <fstream>
 #include <stdio.h>
 #include <vector>
+#include <random>
 
 using namespace std;
 #pragma comment(lib, "Winmm.lib")
@@ -75,12 +76,13 @@ void GotoXY(int x, int y);
 bool GetXY(int& x, int& y);
 bool GetColor(int& color);
 
+int generateRand(int from, int to);
 int midWidth(int width, string message);
 int midWidth(int width, int content_width);
 int midHeight(int height, int content_height);
-void printMessCenter(string message, int text_color = WHITE, int bg_color = BLACK);
+void printMess(string message, int X, int Y, int text_color = generateRand(1, 15), int bg_color = BLACK);
+void printMessCenter(string message, int text_color = generateRand(1, 15), int bg_color = BLACK);
 
-int generateRand(int from, int to);
 
 // Sounds and Musics
 void SetAllVolumes(int volume);

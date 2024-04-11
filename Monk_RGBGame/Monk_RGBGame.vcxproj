@@ -23,7 +23,6 @@
     <ClCompile Include="CommonConfig.cpp" />
     <ClCompile Include="EmptyRoom.cpp" />
     <ClCompile Include="GameHandler.cpp" />
-    <ClCompile Include="Logs.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="ModelArts.cpp" />
@@ -39,7 +38,6 @@
     <ClInclude Include="CommonConfig.h" />
     <ClInclude Include="EmptyRoom.h" />
     <ClInclude Include="GameHandler.h" />
-    <ClInclude Include="Logs.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="ModelArts.h" />
     <ClInclude Include="Monster.h" />

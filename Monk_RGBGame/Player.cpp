@@ -47,11 +47,26 @@ void Player::setHasProtection(bool isProtected) {
 
 void Player::setPlayer()
 {
-    cout << "You're in a fractured reality. And a dungeon, don't forget that. Once you advance through a door, there's no going back. Good luck... \n \n Now that's over, what's your name?\n";
-    cin >> name;
+    string player_prompts[3] = {
+        "You're in a fractured reality. And a dungeon, don't forget that. Once you advance through a door, there's no going back. Good luck... ",
+        "Now that's over, what's your name?",
+        "The powerful Monk has established his name. But what's his story?"
+    };
 
-    std::cout << "The powerful Monk has established his name; " << name << " \n But what's his story? \n";
-    cin >> description;
+    system("cls");
+
+    printMess(player_prompts[0], midWidth(SCREEN_WIDTH, player_prompts[0].size()), SCREEN_HEIGHT * 4 / 20);
+    printMess(player_prompts[1], midWidth(SCREEN_WIDTH, player_prompts[1].size()), SCREEN_HEIGHT * 6 / 20);
+
+    GotoXY(midWidth(SCREEN_WIDTH, player_prompts[1].size()), SCREEN_HEIGHT * 7 / 20);
+    cout << "Enter Your Name: ";
+    getline(cin, name);
+
+    printMess(player_prompts[2], midWidth(SCREEN_WIDTH, player_prompts[2].size()), SCREEN_HEIGHT * 9 / 20);
+
+    GotoXY(midWidth(SCREEN_WIDTH, player_prompts[2].size()), SCREEN_HEIGHT * 10 / 20);
+    cout << "Enter Your Description: ";
+    getline(cin, description);
 }
 
 //Subtract some health from the player's current health.
