@@ -1,5 +1,5 @@
 #pragma once
-#include "GameHandler.h"
+#include "CommonConfig.h"
 
 extern string title[];
 extern int title_height;

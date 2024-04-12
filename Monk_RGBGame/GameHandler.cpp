@@ -1,5 +1,23 @@
 #include "GameHandler.h"
 
+string STATUS_VAR[] = {
+    "Time: ",
+    "Level: ",
+    "Scores: "
+};
+int STATUS_VAR_SIZE = sizeof(STATUS_VAR) / sizeof(string);
+
+string GUIDEBUTTONS[] =
+{
+    "<P> - Pause/Continue", 
+    "<R> - Reset Game",
+    "<M> - Save Game",
+    "<L> - Load Game",
+    "<Esc> - Return to Main Menu"
+
+};
+int GUIDEBUTTONS_SIZE = sizeof(GUIDEBUTTONS) / sizeof(string);
+
 GameHandler::GameHandler()
 {
     StartUp();
@@ -25,6 +43,7 @@ void GameHandler::StartUp()
 
 void GameHandler::init()
 {
+
 }
 
 void GameHandler::resetData()
@@ -35,8 +54,6 @@ void GameHandler::resetData()
 
     player = new Player;
     curRoom = new EmptyRoom;
-
-    player->setPlayer();
 
     //level = 0;
     //score = 0;
@@ -68,12 +85,51 @@ void GameHandler::resetGame()
 
 void GameHandler::startGame()
 {
+    player->setPlayer();
+
     do
     {
+        drawGame();
+
         curRoom->Render();
         curRoom->processRoom(player);
 
     } while (curRoom->getRoomId() == 2);
+}
+
+void GameHandler::drawGame()
+{
+    drawStatus();
+    drawGUI();
+}
+
+void GameHandler::drawStatus()
+{
+    BOX StatusBox(GAMEPLAY_W, 0, STATUS_W, SCREEN_HEIGHT, LIGHTMAGENTA);
+    StatusBox.printBox();
+
+    for (int i = 0; i < STATUS_VAR_SIZE; i++)
+    {
+        GotoXY(GAMEPLAY_W + midWidth(STATUS_W, STATUS_VAR[0].size() + 10), midHeight(SCREEN_HEIGHT, STATUS_VAR_SIZE + GUIDEBUTTONS_SIZE + 1) * 3 / 5 + i * 2);
+        cout << STATUS_VAR[i];
+    }
+
+    for (int i = 0; i < GUIDEBUTTONS_SIZE; i++)
+    {
+        GotoXY(GAMEPLAY_W + midWidth(STATUS_W, GUIDEBUTTONS[GUIDEBUTTONS_SIZE - 1]), midHeight(SCREEN_HEIGHT, STATUS_VAR_SIZE + GUIDEBUTTONS_SIZE + 1) * 3 / 2 + i * 2);
+        cout << GUIDEBUTTONS[i];
+    }
+}
+
+void GameHandler::drawGUI()
+{
+    BOX side[2];
+
+    side[0].setBox(0, 0, GAMEPLAY_W, GAMEPLAY_H, GREEN, BLACK, "GAMEPLAY");
+    side[0].printBox();
+
+    side[1].setBox(0, GAMEPLAY_H, GAMEPLAY_W, DESCRIPTION_H, GREEN, BLACK, "DESCRIPTION");
+    side[1].printBox();
 }
 
 void GameHandler::GenerateNewRooms() {
@@ -638,7 +694,7 @@ int GameHandler::Volumes_Settings()
         {
             system("cls");
             printMessCenter("Wrong format! Please type in a number", WHITE, RED);
-            toupper(_getch());
+            waitForKeyBoard();
         }
         else
             break;

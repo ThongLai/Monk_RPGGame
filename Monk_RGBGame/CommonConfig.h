@@ -46,6 +46,8 @@ extern int SCREEN_WIDTH;
 extern int SCREEN_HEIGHT;
 
 extern int GAMEPLAY_W;
+extern int GAMEPLAY_H;
+extern int DESCRIPTION_H;
 extern int STATUS_W;
 extern int SAVE_SIZE;
 extern int LEADERBOARD_SIZE;
@@ -80,9 +82,10 @@ int generateRand(int from, int to);
 int midWidth(int width, string message);
 int midWidth(int width, int content_width);
 int midHeight(int height, int content_height);
-void printMess(string message, int X, int Y, int text_color = generateRand(1, 15), int bg_color = BLACK);
-void printMessCenter(string message, int text_color = generateRand(1, 15), int bg_color = BLACK);
-
+void printMess(string message, int X, int Y, int text_color = WHITE, int bg_color = BLACK);
+void printMessCenter(string message, int text_color = WHITE, int bg_color = BLACK);
+void waitForKeyBoard(int X = SCREEN_WIDTH / 20, int Y = SCREEN_HEIGHT / 20);
+string waitForInput(string prompt, int X, int Y, int text_color = WHITE, int bg_color = BLACK);
 
 // Sounds and Musics
 void SetAllVolumes(int volume);

@@ -15,6 +15,12 @@
 #include "TreasureRoom.h"
 #include "PuzzleRoom.h"
 
+extern string STATUS_VAR[];
+extern int STATUS_VAR_SIZE;
+
+extern string GUIDEBUTTONS[];
+extern int GUIDEBUTTONS_SIZE;   
+
 class GameHandler {
 private:
     Player* player;
@@ -39,6 +45,10 @@ public:
 
     void resetGame(); //Operate the reset game process
     void startGame(); 
+
+    void drawGame(); //Wrap function to call all draw functions
+    void drawStatus();
+    void drawGUI();
 
     void increaseRoomCount() { roomsExplored ++; }
     int getRoomCount() { return roomsExplored; }

@@ -7,11 +7,13 @@ int SCREEN_WIDTH;
 int SCREEN_HEIGHT;
 
 int GAMEPLAY_W;
+int GAMEPLAY_H;
+int DESCRIPTION_H;
 int STATUS_W;
 int SAVE_SIZE;
 int LEADERBOARD_SIZE;
 
-// Default: 5/10/27/58
+// Default Chances: 5/10/27/58
 int TREASURE_ROOM_CHANCE = 5;
 int PUZZLE_ROOM_CHANCE = 10;
 int EMPTY_ROOM_CHANCE = 27;
@@ -59,6 +61,8 @@ void SetUpParameters()
 {
     GetWindowSize();
     GAMEPLAY_W = 0.75 * SCREEN_WIDTH;
+    GAMEPLAY_H = 0.75 * SCREEN_HEIGHT;
+    DESCRIPTION_H = 0.25 * SCREEN_HEIGHT;
     STATUS_W = SCREEN_WIDTH - GAMEPLAY_W;
     LEADERBOARD_SIZE = SCREEN_HEIGHT * 0.8 / 3 - 1;
     SAVE_SIZE = SCREEN_HEIGHT * 0.8 / 5 - 3;
@@ -165,6 +169,22 @@ void SetAllVolumes(int volume)
     mciSendStringA(string("setaudio Plus_Point volume to " + to_string(volume)).c_str(), NULL, 0, NULL);
     mciSendStringA(string("setaudio Next_Level volume to " + to_string(volume)).c_str(), NULL, 0, NULL);
     mciSendStringA(string("setaudio Finish_Game volume to " + to_string(volume)).c_str(), NULL, 0, NULL);
+}
+
+void waitForKeyBoard(int X, int Y)
+{
+    GotoXY(X, Y);
+    system("pause");
+}
+
+string waitForInput(string prompt, int X, int Y, int text_color, int bg_color)
+{
+    string input;
+    GotoXY(X, Y);
+    cout << prompt;
+    getline(cin, input);
+
+    return input;
 }
 
 

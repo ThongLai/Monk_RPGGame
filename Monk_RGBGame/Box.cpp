@@ -11,11 +11,6 @@ BOX::BOX(int _x, int _y, int _width, int _height, int _text_color, int _bg_color
 	setBox(_x, _y, _width, _height, _text_color, _bg_color, _content);
 }
 
-BOX::BOX(int _x, int _y, int _width, int _height, int _text_color, int _bg_color)
-{
-	setBox(_x, _y, _width, _height, _text_color, _bg_color, "");
-}
-
 void BOX::setBox(int _x, int _y, int _width, int _height, int _text_color, int _bg_color, string _content)
 {
 	setPosition(_x, _y);

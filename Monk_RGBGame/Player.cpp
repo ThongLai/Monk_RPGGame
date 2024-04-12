@@ -1,8 +1,7 @@
 #include "Player.h"
 
-Player::Player(string name, string description, int health, int damage) {
+Player::Player(string name, int health, int damage) {
     this->name = name;
-    this->description = description;
     this->health = health;
     this->damage = damage;
 }
@@ -10,10 +9,6 @@ Player::Player(string name, string description, int health, int damage) {
 // Getters
 string Player::getName() {
     return name;
-}
-
-string Player::getDescription() {
-    return description;
 }
 
 int Player::getHealth() {
@@ -33,10 +28,6 @@ void Player::setName(string name) {
     this->name = name;
 }
 
-void Player::setDescription(string description) {
-    this->description = description;
-}
-
 void Player::setHealth(int health) {
     this->health = health;
 }
@@ -47,26 +38,35 @@ void Player::setHasProtection(bool isProtected) {
 
 void Player::setPlayer()
 {
-    string player_prompts[3] = {
-        "You're in a fractured reality. And a dungeon, don't forget that. Once you advance through a door, there's no going back. Good luck... ",
+    string player_prompts[4] = {
+        "You're in a fractured reality. And a dungeon, don't forget that.",
+        "Once you advance through a door, there's no going back. Good luck...",
         "Now that's over, what's your name?",
-        "The powerful Monk has established his name. But what's his story?"
+        "Hello! Welcome to the Dungeon :)"
     };
 
+    BOX box_drawer(midWidth(SCREEN_WIDTH, SCREEN_WIDTH * 4 / 5), SCREEN_HEIGHT * 2 / 20, SCREEN_WIDTH * 4 / 5, SCREEN_HEIGHT * 4 / 5);
+    box_drawer.printBorder();
+    box_drawer.setBox(midWidth(SCREEN_WIDTH, SCREEN_WIDTH * 3 / 5), SCREEN_HEIGHT * 5 / 20, SCREEN_WIDTH * 3 / 5, SCREEN_HEIGHT * 5 / 20);
+    box_drawer.printBorder();
+
+    printMess(player_prompts[0], midWidth(SCREEN_WIDTH, player_prompts[0].size()), SCREEN_HEIGHT * 6 / 20, YELLOW);
+    printMess(player_prompts[1], midWidth(SCREEN_WIDTH, player_prompts[1].size()), SCREEN_HEIGHT * 8 / 20, YELLOW);
+
+
+    waitForKeyBoard(midWidth(SCREEN_WIDTH, "Press any key to continue . . ."), SCREEN_HEIGHT * 18 / 20);
+
+    printMess(player_prompts[2], midWidth(SCREEN_WIDTH, player_prompts[2].size()), SCREEN_HEIGHT * 12 / 20, LIGHTCYAN);
+    name = waitForInput("Enter Your Name: ", midWidth(SCREEN_WIDTH, player_prompts[2].size()), SCREEN_HEIGHT * 13 / 20);
+    
     system("cls");
+    box_drawer.setBox(midWidth(SCREEN_WIDTH, player_prompts[3].size() + 6), midHeight(SCREEN_HEIGHT, 10), player_prompts[3].size() + 6, 10, WHITE, BLACK);
+    box_drawer.printBorder();
 
-    printMess(player_prompts[0], midWidth(SCREEN_WIDTH, player_prompts[0].size()), SCREEN_HEIGHT * 4 / 20);
-    printMess(player_prompts[1], midWidth(SCREEN_WIDTH, player_prompts[1].size()), SCREEN_HEIGHT * 6 / 20);
+    printMess(player_prompts[3], midWidth(SCREEN_WIDTH, player_prompts[3].size()), midHeight(SCREEN_HEIGHT, 10) + 2, WHITE);
+    printMess(name, midWidth(SCREEN_WIDTH, name.size()), midHeight(SCREEN_HEIGHT, 10) + 6, LIGHTCYAN);
 
-    GotoXY(midWidth(SCREEN_WIDTH, player_prompts[1].size()), SCREEN_HEIGHT * 7 / 20);
-    cout << "Enter Your Name: ";
-    getline(cin, name);
-
-    printMess(player_prompts[2], midWidth(SCREEN_WIDTH, player_prompts[2].size()), SCREEN_HEIGHT * 9 / 20);
-
-    GotoXY(midWidth(SCREEN_WIDTH, player_prompts[2].size()), SCREEN_HEIGHT * 10 / 20);
-    cout << "Enter Your Description: ";
-    getline(cin, description);
+    waitForKeyBoard(midWidth(SCREEN_WIDTH, "Press any key to continue . . ."), SCREEN_HEIGHT * 18 / 20);
 }
 
 //Subtract some health from the player's current health.

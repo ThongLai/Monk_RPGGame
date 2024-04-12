@@ -109,7 +109,7 @@ int MENU::inputMenu()
 	{
 		if (isPress) {
 			selectedBox(i);
-			isPress = false;
+			isPress = false;	
 		}
 
 		if (_kbhit())

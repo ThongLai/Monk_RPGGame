@@ -12,10 +12,9 @@ protected:
 	int text_color, bg_color;
 public:
 	BOX();
-	BOX(int _x, int _y, int _width, int _height, int _text_color, int _bg_color, string _content);
-	BOX(int _x, int _y, int _width, int _height, int _text_color, int _bg_color);
+	BOX(int _x, int _y, int _width, int _height, int _text_color = WHITE, int _bg_color = BLACK, string _content = "");
 
-	void setBox(int _x, int _y, int _width, int _height, int _text_color, int _bg_color, string _content);
+	void setBox(int _x, int _y, int _width, int _height, int _text_color = WHITE, int _bg_color = BLACK, string _content = "");
 	void setPosition(int _x, int _y);
 	void setFormat(int _w, int _h, int _text_color, int _bg_color);
 	void setContent(string _content);
