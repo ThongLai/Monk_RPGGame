@@ -6,18 +6,21 @@
 class Player {
 private:
     string name;
+    int playerColor;
 
     int health;
-    int damage; 
+    int damage;
 
-    bool isProtected = false;
+    bool isProtected;
+    int cancelActionChance;
 public:
-    Player(string name = "", int heath = PLAYER_BASE_HEALTH, int damage = PLAYER_BASE_DAMAGE);
+    Player(string name = "",int playerColor = PLAYER_COLOR, int heath = PLAYER_BASE_HEALTH, int damage = PLAYER_BASE_DAMAGE, int cancelActionChance = PLAYER_CANCEL_ACTION_CHANCE);
 
     string getName();
     int getHealth();
     int getDamage();
     bool hasProtection();
+    int getPlayerColor();
 
     void setName(string name);
     void setHealth(int health);
@@ -25,6 +28,9 @@ public:
 
     void setPlayer();
     void takeDamage(int amount);
-    bool tryAction();
-    void Die();
+    bool tryCancelAction();
+    bool isAlive();
+
+    void displayHealth();
+    void removeHealth();
 };

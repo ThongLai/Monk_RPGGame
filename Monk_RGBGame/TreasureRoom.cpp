@@ -1,43 +1,69 @@
 #include "TreasureRoom.h"
 
-TreasureRoom::TreasureRoom(bool isTreasureCollected) : Room("Treasure Room") {
-    description = "In the treasure room, the monk is surrounded by dazzling wealth and priceless artifacts, offering boundless opportunities for fortune and abundance.";
-    this->isTreasureCollected = isTreasureCollected;
+TreasureRoom::TreasureRoom() : Room("Treasure Room", TREASURE_ROOM_COLOR, TREASURE_ROOM_COLOR) {
+    setDescription("You enter a dark room. As you walk forward, you can smell a strange scent coming from in front of you... ");
 }
 
-void TreasureRoom::Render(string playerName) {
-    cout << "You enter a dark room. As you walk forward, you can smell a strange scent coming from in front of you. \n "
-        "Your stomach rumbles. Your inside, ready. This is it. It's the Treasure Room!\n \n Right in front of you, "
-        "is a Domino's Meateor pizza." << endl;
+string TREASURE_PROMPT[] =
+{
+    "Collect Treasure",
+    "Ignore?",
+};
+int TREASURE_PROMPT_SIZE = sizeof(TREASURE_PROMPT) / sizeof(string);
 
-    cout << "      ____...------------...____\n"
-        "               _.-\"` /o/__ ____ __ __  __ \\o\\_`\"-._\n"
-        "             .'     / /                    \\ \\     '.\n"
-        "             |=====/o/======================\\o\\=====|\n"
-        "             |____/_/________..____..________\\_\\____|\n"
-        "             /   _/ \\_     <_o#\\__/#o_>     _/ \\_   \\\n"
-        "             \\_________\\####/_________/\n"
-        "              |===\\!/========================\\!/===|\n"
-        "              |   |=|          .---.         |=|   |\n"
-        "              |===|o|=========/     \\========|o|===|\n"
-        "              |   | |         \\() ()/        | |   |\n"
-        "              |===|o|======{'-.) A (.-'}=====|o|===|\n"
-        "              | __/ \\__     '-.\\uuu/.-'    __/ \\__ |\n"
-        "              |==== .'.'^'.'.====|\n"
-        "              |  _\\o/   __  {.' __  '.} _   _\\o/  _|\n"
-        "              `\"\"\"\"-\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"-\"\"\"\"`\n";
-}
+bool TreasureRoom::processRoom(Player* player) {
 
-void TreasureRoom::processRoom(Player* player) {
-    string instruction = "1";
+    printOnGameplayCenterAndWait("Your stomach rumbles. Your inside, ready. This is it. It's the Treasure Room! Right in front of you... ");
+    printOnGameplayCenterAndWait("In the treasure room, the monk is surrounded by dazzling wealth and priceless artifacts!");
+    
+    drawArt(
+        TREASURE_ART,
+        TREASURE_HEIGHT,
+        midWidth(GAMEPLAY_W, TREASURE_WIDTH),
+        midHeight(GAMEPLAY_H, TREASURE_HEIGHT),
+        TREASURE_ROOM_COLOR
+    );
 
-    while (instruction != "0") {
-        cout << " What will you do? \n [0] = Collect Treasure" << endl;
-        cin >> instruction;
-        if (instruction != "0") cout << "Why would you want to do anything else when there's yummy treasure in front of you?! " << endl;
+    string prompt = "It's the Dungeon's Treasure Chest!";
+    printString(prompt, midWidth(GAMEPLAY_W, prompt.size()), GAMEPLAY_H + midHeight(DESCRIPTION_H, 1), TREASURE_ROOM_COLOR);
+
+    int box_width = 20;
+    int box_height = 3;
+    MENU treasureMenu("What will you do?", TREASURE_PROMPT, TREASURE_PROMPT_SIZE, GAMEPLAY_W / 10, GAMEPLAY_H + 2 + midHeight(DESCRIPTION_H, box_height * TREASURE_PROMPT_SIZE), box_width, box_height, TREASURE_ROOM_COLOR);
+    treasureMenu.setBoxFormat(0, box_width, box_height, TREASURE_ROOM_COLOR, BLACK);
+    treasureMenu.setBoxFormat(1, box_width, box_height, LIGHTRED, BLACK);
+    treasureMenu.printMenu();
+    int player_action = treasureMenu.inputMenu();
+    treasureMenu.removeMenu();
+
+    if (player_action == 1) {
+        treasureMenu.setTitle("Are you sure you want to IGNORE it?");
+        treasureMenu.printMenu();
+        player_action = treasureMenu.inputMenu();
+        treasureMenu.removeMenu();
+
+        if (player_action == 1) {
+            removeArt(
+                TREASURE_HEIGHT,
+                TREASURE_WIDTH,
+                midWidth(GAMEPLAY_W, TREASURE_WIDTH),
+                midHeight(GAMEPLAY_H, TREASURE_HEIGHT)
+            );
+
+            printStringCenter("It's WEIRD that you choose to ignore the Treasure");
+            printOnDescriptionCenterAndWait("Oh well... you are probably an adventurous person. Let continue then!", player->getPlayerColor());
+            return true;
+        }
     }
 
-    cout << player->getName() << " -  The Monk collected the treasure, and makes their way out of the dungeon!" << endl;
-    system("pause");
-    exit(0);
+    printOnDescriptionCenterAndWait(player->getName() + " The Monk collected the treasure, and makes their way out of the Dungeon!", TREASURE_ROOM_COLOR);
+
+    removeArt(
+        TREASURE_HEIGHT,
+        TREASURE_WIDTH,
+        midWidth(GAMEPLAY_W, TREASURE_WIDTH),
+        midHeight(GAMEPLAY_H, TREASURE_HEIGHT)
+    );
+
+    return false;
 }

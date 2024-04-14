@@ -54,9 +54,6 @@
     <ClCompile Include="TreasureRoom.cpp">
       <Filter>Source Files\Rooms</Filter>
     </ClCompile>
-    <ClCompile Include="PuzzleRoom.cpp">
-      <Filter>Source Files\Rooms</Filter>
-    </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>Source Files\Entities</Filter>
     </ClCompile>
@@ -71,6 +68,9 @@
     </ClCompile>
     <ClCompile Include="Box.cpp">
       <Filter>Source Files\Display</Filter>
+    </ClCompile>
+    <ClCompile Include="Goblin.cpp">
+      <Filter>Source Files\Entities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -92,9 +92,6 @@
     <ClInclude Include="TreasureRoom.h">
       <Filter>Header Files\Rooms</Filter>
     </ClInclude>
-    <ClInclude Include="PuzzleRoom.h">
-      <Filter>Header Files\Rooms</Filter>
-    </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>Header Files\Entities</Filter>
     </ClInclude>
@@ -109,6 +106,9 @@
     </ClInclude>
     <ClInclude Include="ModelArts.h">
       <Filter>Header Files\Display</Filter>
+    </ClInclude>
+    <ClInclude Include="Goblin.h">
+      <Filter>Header Files\Entities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

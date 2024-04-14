@@ -23,13 +23,13 @@
     <ClCompile Include="CommonConfig.cpp" />
     <ClCompile Include="EmptyRoom.cpp" />
     <ClCompile Include="GameHandler.cpp" />
+    <ClCompile Include="Goblin.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="ModelArts.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="MonsterRoom.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="PuzzleRoom.cpp" />
     <ClCompile Include="Room.cpp" />
     <ClCompile Include="TreasureRoom.cpp" />
   </ItemGroup>
@@ -38,12 +38,12 @@
     <ClInclude Include="CommonConfig.h" />
     <ClInclude Include="EmptyRoom.h" />
     <ClInclude Include="GameHandler.h" />
+    <ClInclude Include="Goblin.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="ModelArts.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="MonsterRoom.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="PuzzleRoom.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="TreasureRoom.h" />
   </ItemGroup>

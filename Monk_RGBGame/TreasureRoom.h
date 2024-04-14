@@ -2,12 +2,12 @@
 
 #include "Room.h"
 
+extern string TREASURE_PROMPT[];
+extern int TREASURE_PROMPT_SIZE;
+
 class TreasureRoom : public Room {
-private:
-    bool isTreasureCollected;
 public:
-    TreasureRoom(bool isTreasureCollected = false);
+    TreasureRoom();
     
-    void Render(string = "");
-    void processRoom(Player* player);
+    bool processRoom(Player* player);
 };

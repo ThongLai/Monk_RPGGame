@@ -1,240 +1,166 @@
 #include "MonsterRoom.h"
 
-MonsterRoom::MonsterRoom(int monsterId) : Room("Monster Room") {
-    description = "Monster room, danger lurks. The monk must face a formidable creature in a fierce battle for survival.";
-    monster = new Monster(generateRand(0, 2));
-}
+MonsterRoom::MonsterRoom(int monsterId) : Room("Monster Room", MONTER_ROOM_COLOR, MONTER_ROOM_COLOR) {
+    setDescription("Monster room, danger lurks. The monk must face a formidable creature in a fierce battle for survival.");
 
-Monster* MonsterRoom::getMonster() {
-    return monster;
-}
+    // Randomise the monster. 0 = Goblin, 1 = Zombie, 2 = Vampire.
 
-bool MonsterRoom::isMonsterAlive() {
-    return (monster->getHealth() > 0);
-}
-
-void MonsterRoom::CombatTryAttack(Player* player, int turn) {
-    if (turn == 0) {
-        if (player->tryAction()) {
-            cout << player->getName() << " the Monk attacks the " << monster->getName() << "!" << endl;
-            monster->takeDamage(player->getDamage());
-        }
-        else {
-            cout << "The " << monster->getName() << " dodged " << player->getName() << "'s attack!" << endl;
-        }
-    }
-    else {
-        if (monster->tryAction()) {
-            if (player->hasProtection()) {
-                cout << "\n The " << monster->getName() << " tried to attack, but the Staff of Protection blocked the attack from the " << monster->getName() << "!" << endl;
-                player->setHasProtection(false);
-            }
-            else {
-                cout << "\nThe " << monster->getName() << " strikes " << player->getName() << " the Monk! OUCH!" << endl;
-                player->takeDamage(monster->getDamage());
-            }
-        }
-        else {
-            cout << "\nThe " << monster->getName() << " failed to attack " << player->getName() << " the Monk!" << endl;
-        }
-    }
-}
-void MonsterRoom::CombatTryDefend(Player* player, int turn) {
-    if (turn == 0) {
-        if (player->tryAction()) {
-            cout << endl;
-            cout << player->getName() << " the Monk defends themselves against the monster, restoring 1 HP." << endl;
-            // If the player does not have max health, increase it by 1. Otherwise, move on.
-            if (player->getHealth() != PLAYER_BASE_HEALTH)
-                player->setHealth(player->getHealth() + 1);
-            else 
-                cout << "DEFEND: Failed to increase health: Health was already max!";
-        }
-        else {
-            cout << endl;
-            cout << player->getName() << " the Monk failed to defend against the " << monster->getName() << endl;
-            cout << "The " << monster->getName() << " dealt ";
-            printf("%d damage!\n", monster->getDamage());
-            player->takeDamage(monster->getDamage());
-        }
-    }
-    else {
-        if (monster->tryAction()) {
-            if (monster->getHealth() != monster->getBaseHealth()) {
-                monster->setHealth(monster->getHealth() + 1);
-                cout << "\nThe " << monster->getName() << " defended against " << player->getName() << " the Monk and gained +1 health." << endl;
-            }
-            else {
-                cout << "\nThe " << monster->getName() << " defended itself, but was already full health." << endl;
-            }
-        }
-        else {
-            monster->takeDamage(player->getDamage());
-            cout << "\nThe " << monster->getName() << " failed to defend itself, and " << player->getName() << " exploited this!" << endl;
-        }
+    switch (monsterId) {
+    default: // Default to case 0 (Goblin monster)
+    case(0):
+        monster = new Goblin;
+        break;
+        //case(1):
+        //    this->setName("Zombie");
+        //    this->setBaseHealth(8);
+        //    this->setHealth(this->getBaseHealth());
+        //    this->setDamage(3);
+        //    this->setDescription("Blurrrrrghhh!");
+        //    this->attackChance = 95;
+        //    this->defendChance = 5;
+        //    break;
+        //case(2):
+        //    this->setName("Vampire");
+        //    this->setBaseHealth(12);
+        //    this->setHealth(this->getBaseHealth());
+        //    this->setDamage(2);
+        //    this->setDescription("Mwuahahahaha!");
+        //    this->defendChance = 65;
+        //    this->attackChance = 35;
+        //    break;
     }
 }
 
-void MonsterRoom::Render(string) {
-    if (monster->getName() == "Goblin") {
-        std::cout << "                   (    )\n"
-            "                  ((((()))\n"
-            "                  |o\\ /o)|\n"
-            "                  ( (  _')\n"
-            "                   (._.  /\\__\n"
-            "                  ,\\___,/ '  ')\n"
-            "    '.,_,,       (  .- .   .    )\n"
-            "     \\   \\\\     ( '        )(    )\n"
-            "      \\   \\\\    \\.  _.__ ____( .  |\n"
-            "       \\  /\\\\   .(   .'  /\\  '.  )\n"
-            "        \\(  \\\\.-' ( /    \\/    \\)\n"
-            "         '  ()) _'.-|/\\/\\/\\/\\/\\|\n"
-            "             '\\\\ .( |\\/\\/\\/\\/\\/|\n"
-            "               '((  \\    /\\    /\n"
-            "               ((((  '.__\\/__.')\n"
-            "                ((,) /   ((()   )\n"
-            "                 \"..-,  (()(\"   /\n"
-            "                  _//.   ((() .\"\n"
-            "          _____ //,/\" ___ ((( ', ___\n"
-            "                           ((  )\n"
-            "                            / /\n"
-            "                          _/,/'\n"
-            "                        /,/,\"\n"
-            "\n"
-            "------------------------------------------------\n" << endl;
-    }
-    else if (monster->getName() == "Vampire") {
-        std::cout << "\n"
-            "                            __...---^^^^^---...__\n"
-            "                       _.-^^                     ^^-._\n"
-            "                     ./'                             `\\.\n"
-            "                   _/'                                 `\\_\n"
-            "                  /'                                     `\\\n"
-            "                 /                                         \\\n"
-            "                |'                                         `|\n"
-            "              __'                                           `__\n"
-            "     ____.---^^^^-.                                       .-^^^^---.____\n"
-            "\\_  (   __,--^^-._ ^.                                   .^ _.-^^--.__   )  _/\n"
-            " `\\_ `-^      |  `\\  \\                                 /  /'  |      ^-' _/'\n"
-            " |\\`\\_        |    \\  \\                               /  /    |        _/'/|\n"
-            "|`|`\\`\\_     .|     \\  \\              .              /  /     |.     _/'/'|'|\n"
-            "| |  `\\`\\_   |'     |   \\             |             /   |     `|   _/'/'  | |\n"
-            "`|    /`\\`\\ ||                        |                        || /'/'\\    |'\n"
-            " |  :'   \\,|'                  .._         _..                  `|.'   `:  |\n"
-            " `| |     /                       ^=._ _.=^                       \\     | |'\n"
-            "  |      d^^^xxx.__                  `|'                  __.xxx^^^b      |\n"
-            "  `|    d#.  9XX^^\\\\^^--..__          |          __..--^^//^^XX    #b    |'\n"
-            "   |   |##x__  |    \\       ^^Xx..__  |  __..xX^^       /    |  __x#|    |\n"
-            "    \\     ^^   |     \\_            _/^ ^\\_            _/     |   ^^     /\n"
-            "     `-._      |       ^^-----...-^       ^-...-----^^      |'      _.-'\n"
-            "         ^-._  `|   ^^-------^^^^    |      ^^^^-------^^   |   _.-^\n"
-            "             ^- ||                  .|                     || -^\n"
-            "               |^||                 l|                    ||^|\n"
-            "               |  |                .d|xx.                 |  |\n"
-            "              |'  `|                                     |'  `|\n"
-            "              |   |;               ..----.               ;|   |\n"
-            "              |   |X\\._            ^ __               _./X|   |\n"
-            "             |'    |  ^-._         .X\"\"^^^         _.-^  |    `|\n"
-            "             |     |     \\^-._                 _.-^/     |     |\n"
-            "         ___|,     `|      `\\\\^-._         _.-^//'      |'     `|___\n"
-            "..---^^^^   |       |         `\\\\\\^-.___.-^///'         |       |   ^^^^---..\n"
-            "            |       `|            `\\\\XXX//'            |'       |\n"
-            "            |      | `|              ^^^              |' |      |\n"
-            "            `|     `| `|                             |' |'     |'\n"
-            "                     \\  \\                           /  /\n"
-            "..........------------------.....__      __.....-------------------..........\n"
-            "                                   ^\\   /^\n"
-            "                                     \\v/\n"
-            "                                      |\n"
-            "                                      |\n"
-            "___                                   |                                    __\n"
-            "#######xxxxxx_____                    |                    _____xxxxxx#######\n"
-            "#######################xxxxxxxxxx___  |  ___xxxxxxxxxx#######################\n"
-            "#############################################################################\n"
-            "#############################################################################\n"
-            "#############################################################################\n"
-            "#############################################################################\n"
-            "\n" << endl;
-    }
-    if (monster->getName() == "Zombie") {
-        std::cout << "X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X\n"
-            "|                           ,,'``````````````',,                            |\n"
-            "X                        ,'`                   `',                          X\n"
-            "|                      ,'                         ',                        |\n"
-            "X                    ,'          ;       ;          ',                      X\n"
-            "|       (           ;             ;     ;             ;     (               |\n"
-            "X        )         ;              ;     ;              ;     )              X\n"
-            "|       (         ;                ;   ;                ;   (               |\n"
-            "X        )    ;   ;    ,,'```',,,   ; ;   ,,,'```',,    ;   ;               X\n"
-            "|       (    ; ',;   '`          `',   ,'`          `'   ;,' ;              |\n"
-            "X        )  ; ;`,`',  _--~~~~--__   ' '   __--~~~~--_  ,'`,'; ;     )       X\n"
-            "|       (    ; `,' ; :  /       \\~~-___-~~/       \\  : ; ',' ;     (        |\n"
-            "X  )     )   )',  ;   -_\\  o    /  '   '  \\    o  /_-   ;  ,'       )   (   X\n"
-            "| (     (   (   `;      ~-____--~'       '~--____-~      ;'  )     (     )  |\n"
-            "X  )     )   )   ;            ,`;,,,   ,,,;',            ;  (       )   (   X\n"
-            "| (     (   (  .  ;        ,'`  (__ '_' __)  `',        ;  . )     (     )  |\n"
-            "X  )     \\/ ,\".). ';    ,'`        ~~ ~~        `',    ;  .(.\", \\/  )   (   X\n"
-            "| (   , ,'|// / (/ ,;  '        _--~~-~~--_        '  ;, \\)    \\|', ,    )  |\n"
-            "X ,)  , \\/ \\|  \\\\,/  ;;       ,; |_| | |_| ;,       ;;  \\,//  |/ \\/ ,   ,   X\n"
-            "|\",   .| \\_ |\\/ |#\\_/;       ;_| : `~'~' : |_;       ;\\_/#| \\/| _/ |.   ,\"  |\n"
-            "X#(,'  )  \\\\\\#\\ \\##/)#;     :  `\\/       \\/   :     ;#(\\##/ /#///  (  ',)# ,X\n"
-            "|| ) | \\ |/ /#/ |#( \\; ;     :               ;     ; ;/ )#| \\#\\ \\| / | ( |) |\n"
-            "X\\ |.\\\\ |\\_/#| /#),,`   ;     ;./\\_     _/\\.;     ;   `,,(#\\ |#\\_/| //.| / ,X\n"
-            "| \\\\_/# |#\\##/,,'`       ;     ~~--|~|~|--~~     ;       `',,\\##/#| #\\_// \\/|\n"
-            "X  ##/#  #,,'`            ;        ~~~~~        ;            `',,#  #\\##  //X\n"
-            "|####@,,'`                 `',               ,'`                 `',,@####| |\n"
-            "X#,,'`                        `',         ,'`                        `',,###X\n"
-            "|'                               ~~-----~~                               `' |\n"
-            "X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X-X\n"
-            "\n"
-            "------------------------------------------------\n" << endl;
-    }
-
-    cout << description << monster->getDescription() << endl;
-    cout << "It's a " << monster->getName() << "! The door behind you locks. The battle has already begun." << endl;
+MonsterRoom::~MonsterRoom()
+{
+    delete monster;
 }
 
-void MonsterRoom::processRoom(Player* player) {
-    int turn = 0;
-    while (isMonsterAlive()) {
-        printf("The monster's health is currently: [%d / %d]\n", monster->getHealth(), monster->getBaseHealth());
-        printf("The Monk's Health is currently: [%d / %d]\n", player->getHealth(), PLAYER_BASE_HEALTH);
+string ACTION_PROMPT[] =
+{
+    "Attack",
+    "Defend",
+};
+int ACTION_PROMPT_SIZE = sizeof(ACTION_PROMPT) / sizeof(string);
 
-        if (turn == 0) {
-            string instruction = "2";
+bool MonsterRoom::processRoom(Player* player) {
+    drawArt(
+        GOBLIN_ART,
+        GOBLIN_HEIGHT,
+        midWidth(GAMEPLAY_W, GOBLIN_WIDTH),
+        midHeight(GAMEPLAY_H, GOBLIN_HEIGHT),
+        monster->getMonsterColor()
+    );
 
-            while (instruction != "0" && instruction != "1") {
-                cout << "What will the all-powerful Monk do? \n [0] = Attack \n [1] = Defend\n";
-                cin >> instruction;
-                if (instruction != "0" && instruction != "1") {
-                    cout << "The Monk didn't understand this instruction!" << endl;
+    monster->displayHealth();
+
+    printOnDescriptionCenterAndWait("It's a " + monster->getName() + "! The door behind you locks. The battle has begun!");
+
+    while (true) {
+        int box_width = 20;
+        int box_height = 3;
+        MENU actionMenu("What will the all-powerful Monk do?", ACTION_PROMPT, ACTION_PROMPT_SIZE, GAMEPLAY_W / 10, GAMEPLAY_H + 2 + midHeight(DESCRIPTION_H, box_height * ACTION_PROMPT_SIZE), box_width, box_height, WHITE, BLACK);
+        actionMenu.setBoxFormat(0, box_width, box_height, LIGHTRED, BLACK);
+        actionMenu.setBoxFormat(1, box_width, box_height, LIGHTBLUE, BLACK);
+        actionMenu.printMenu();
+
+        int player_action = actionMenu.inputMenu();
+        actionMenu.removeMenu();
+        int monster_action = monster->actionToPerform();
+
+
+        if (player_action == 0) // Player Attack 
+        {
+            printOnDescriptionCenterAndWait(player->getName() + " the Monk ATTACKED " + monster->getName() + "!", player->getPlayerColor());
+
+            if (monster_action == 1) {
+                printOnDescriptionCenterAndWait(monster->getName() + " DEFENDED " + player->getName() + "'s attack!", monster->getMonsterColor());
+
+                if (player->tryCancelAction()) {// Monster Defend
+
+                    printOnDescriptionCenterAndWait(monster->getName() + " FAILED to DEFEND against " + player->getName(), monster->getMonsterColor());
+
+                    monster->removeHealth();
+                    monster->takeDamage(player->getDamage());
+                    monster->displayHealth();
+
+                    printOnDescriptionCenterAndWait(player->getName() + " dealt " + to_string(player->getDamage()) + " damage!", player->getPlayerColor());
+
+                    if (!monster->isAlive())
+                        break;
                 }
             }
-
-            if (instruction == "0") {
-                CombatTryAttack(player, turn);
-            }
+            else if (monster->tryCancelAction())
+                printOnDescriptionCenterAndWait(monster->getName() + " DODGED " + player->getName() + "'s attack!", monster->getMonsterColor());
             else {
-                CombatTryDefend(player, turn);
-            }
+                monster->removeHealth();
+                monster->takeDamage(player->getDamage());
+                monster->displayHealth();
 
-            turn = 1; // Set the turn to the monster.
+                printOnDescriptionCenterAndWait(player->getName() + " dealt " + to_string(player->getDamage()) + " damage!", player->getPlayerColor());
+                
+                if (!monster->isAlive())
+                    break;
+            }
         }
-        else {
+        else if (monster_action == 1)
+            printOnDescriptionCenterAndWait(player->getName() + " tried to DEFEND " + monster->getName() + "'s attack!", player->getPlayerColor());
 
-            if (monster->actionToPerform() == 0) {
-                CombatTryAttack(player, turn);
+        if (monster_action == 0) // Monster Attack 
+        {
+            printOnDescriptionCenterAndWait(monster->getName() + " ATTACKED " + player->getName() + "!", monster->getMonsterColor());
+
+            if (player_action == 1) {
+                printOnDescriptionCenterAndWait(player->getName() + " DEFENDED " + monster->getName() + "'s attack!", player->getPlayerColor());
+
+                if (monster->tryCancelAction()) {
+                    printOnDescriptionCenterAndWait(player->getName() + " FAILED to DEFEND against " + monster->getName(), player->getPlayerColor());
+
+                    player->removeHealth();
+                    player->takeDamage(monster->getDamage());
+                    player->displayHealth();
+
+                    printOnDescriptionCenterAndWait(monster->getName() + " dealt " + to_string(monster->getDamage()) + " damage!", monster->getMonsterColor());
+                    
+                    if (!player->isAlive())
+                        break;
+                }
             }
+            else if (player->tryCancelAction())
+                printOnDescriptionCenterAndWait(player->getName() + " DODGED " + monster->getName() + "'s attack!", player->getPlayerColor());
             else {
-                CombatTryDefend(player, turn);
-            }
-            if (monster->tryAction()) { // Tries to attack or defend
 
+                player->removeHealth();
+                player->takeDamage(monster->getDamage());
+                player->displayHealth();
+
+                printOnDescriptionCenterAndWait(monster->getName() + " dealt " + to_string(monster->getDamage()) + " damage!", monster->getMonsterColor());
+                
+                if (!player->isAlive())
+                    break;
             }
-            turn = 0; // Set the turn back to the player.
         }
+        else if (player_action == 1)
+            printOnDescriptionCenterAndWait(monster->getName() + " tried to DEFEND " + player->getName() + "'s attack!", monster->getMonsterColor());
     }
 
-    // The Monster has been defeated, allow the player to move on.
-    cout << "The " << monster->getName() << " was defeated by " << player->getName() << " The Monk! \n The Monk moves on to the next room..." << endl;
+    removeArt(
+        GOBLIN_HEIGHT,
+        GOBLIN_WIDTH,
+        midWidth(GAMEPLAY_W, GOBLIN_WIDTH),
+        midHeight(GAMEPLAY_H, GOBLIN_HEIGHT)
+    );
+
+    monster->removeHealth();
+
+    if (player->isAlive()) {
+        // The Monster has been defeated, allow the player to move on.
+        printOnGameplayCenterAndWait(monster->getName() + " was defeated by " + player->getName() + " The Monk!", player->getPlayerColor());
+        return true;
+    }
+    else {
+        // The Player has been defeated, Game over.
+        printOnDescriptionCenterAndWait(player->getName() + " died in battle! The treasure was never found... ", RED);
+        return false;
+    }
 }

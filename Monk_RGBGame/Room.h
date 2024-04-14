@@ -3,27 +3,32 @@
 #include "CommonConfig.h"
 #include "Player.h"
 #include "Menu.h"
+#include "ModelArts.h"
 
 class Room {
 private:
     Room* leftRoom;
     Room* rightRoom;
 
-    string type;
-    int id;
-protected:
+    string roomName;
     string description;
+
+    int nameColor;
+    int descColor;
 public:
-    Room(string type, bool isClear = false);
+    Room(string roomName, int nameColor = WHITE, int descColor = WHITE);
     ~Room();
 
+    void setDescription(string description);
     void setLeftRoom(Room *left);
-    void setRightRoom(Room *right);
+    void setRightRoom(Room* right);
 
+    string getName();
+    string getDescription();
     Room *getLeftRoom();
     Room *getRightRoom();
-    int getRoomId();
 
-    virtual void Render(string = "") = 0;
-    virtual void processRoom(Player* player) = 0;
+    void displayRoomNameAndDesc();
+    void removeRoomName();
+    virtual bool processRoom(Player* player) = 0;
 };

@@ -8,6 +8,8 @@
 #include <stdio.h>
 #include <vector>
 #include <random>
+#include <thread>
+#include <iomanip>
 
 using namespace std;
 #pragma comment(lib, "Winmm.lib")
@@ -45,6 +47,12 @@ extern int SCREEN_HEIGHT_PXL;
 extern int SCREEN_WIDTH;
 extern int SCREEN_HEIGHT;
 
+extern string STATUS_VAR[];
+extern int STATUS_VAR_SIZE;
+
+extern string GUIDEBUTTONS[];
+extern int GUIDEBUTTONS_SIZE;
+
 extern int GAMEPLAY_W;
 extern int GAMEPLAY_H;
 extern int DESCRIPTION_H;
@@ -54,13 +62,26 @@ extern int LEADERBOARD_SIZE;
 
 //Rooms Chances
 extern int TREASURE_ROOM_CHANCE;
-extern int PUZZLE_ROOM_CHANCE;
 extern int EMPTY_ROOM_CHANCE;
 extern int MONSTER_ROOM_CHANCE;
+
+extern int TREASURE_ROOM_COLOR;
+extern int EMPTY_ROOM_COLOR;
+extern int MONTER_ROOM_COLOR;
+
 
 //Entities Parameters
 extern int PLAYER_BASE_HEALTH;
 extern int PLAYER_BASE_DAMAGE;
+extern int PLAYER_CANCEL_ACTION_CHANCE;
+extern int PLAYER_COLOR;
+
+extern int GOBLIN_BASE_HEALTH;
+extern int GOBLIN_BASE_DAMAGE;
+extern int GOBLIN_CANCEL_ACTION_CHANCE;
+extern int GOBLIN_ATK_DEF_CHANCE;
+extern int GOBLIN_COLOR;
+
 
 // Set up when starting up functions
 void setRasterFonts();
@@ -82,8 +103,17 @@ int generateRand(int from, int to);
 int midWidth(int width, string message);
 int midWidth(int width, int content_width);
 int midHeight(int height, int content_height);
-void printMess(string message, int X, int Y, int text_color = WHITE, int bg_color = BLACK);
-void printMessCenter(string message, int text_color = WHITE, int bg_color = BLACK);
+
+void printString(string message, int X, int Y, int text_color = WHITE, int bg_color = BLACK);
+void printStringCenter(string message, int text_color = WHITE, int bg_color = BLACK);
+void removeMess(string message, int X, int Y);
+
+void printOnDescriptionAndWait(string prompt, int X, int Y = GAMEPLAY_H + midHeight(DESCRIPTION_H, 1), int text_color = WHITE, int bg_color = BLACK);
+void printOnDescriptionCenterAndWait(string prompt, int text_color = WHITE, int bg_color = BLACK);
+
+void printOnGameplayAndWait(string prompt, int X, int Y = midHeight(GAMEPLAY_H, 1), int text_color = WHITE, int bg_color = BLACK);
+void printOnGameplayCenterAndWait(string prompt, int text_color = WHITE, int bg_color = BLACK);
+
 void waitForKeyBoard(int X = SCREEN_WIDTH / 20, int Y = SCREEN_HEIGHT / 20);
 string waitForInput(string prompt, int X, int Y, int text_color = WHITE, int bg_color = BLACK);
 

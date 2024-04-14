@@ -2,8 +2,9 @@
 
 GameHandler gameHandler;
 
+
 int main() {
-    printMessCenter("LOADING ...");
+    printStringCenter("LOADING ...");
     
     //Load and open files
     //LoadPlayerSaves();

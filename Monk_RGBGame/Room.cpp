@@ -1,36 +1,24 @@
 #include "Room.h"
 
-Room::Room(string type, bool isClear)
+Room::Room(string roomName, int nameColor, int descColor)
 {
-    this->type = type;
-
-    if (type == "Empty Room")
-        this->id = 0;
-    else if (type == "Monster Room")
-        this->id = 1;
-    else if (type == "Treasure Room")
-        this->id = 2;
-    else if (type == "Puzzle Room")
-        this->id = 3;
+    this->roomName = roomName;
+    this->nameColor = nameColor;
+    this->descColor = descColor;
+    this->leftRoom = this->rightRoom = NULL;
 }
 
 Room::~Room()
 {
+    removeMess(roomName, midWidth(GAMEPLAY_W, roomName.size()), GAMEPLAY_H + 1);
+
     delete leftRoom;
     delete rightRoom;
 }
 
-int Room::getRoomId()
+void Room::setDescription(string description)
 {
-    return id;
-}
-
-Room* Room::getLeftRoom() {
-    return leftRoom;
-}
-
-Room* Room::getRightRoom() {
-    return rightRoom; 
+    this->description = description;
 }
 
 void Room::setLeftRoom(Room *left) {
@@ -39,4 +27,33 @@ void Room::setLeftRoom(Room *left) {
 
 void Room::setRightRoom(Room *right) {
     rightRoom = right;
+}
+
+string Room::getName()
+{
+    return roomName;
+}
+
+string Room::getDescription()
+{
+    return description;
+}
+
+Room* Room::getLeftRoom() {
+    return leftRoom;
+}
+
+Room* Room::getRightRoom() {
+    return rightRoom;
+}
+
+void Room::displayRoomNameAndDesc()
+{
+    printString(roomName, midWidth(GAMEPLAY_W, roomName.size()), GAMEPLAY_H + 1, nameColor);
+    printOnDescriptionAndWait(description, midWidth(GAMEPLAY_W, description.size()), GAMEPLAY_H + midHeight(DESCRIPTION_H, 1), descColor);
+}
+
+void Room::removeRoomName()
+{
+    printString(string(roomName.size(), ' '), midWidth(GAMEPLAY_W, roomName.size()), GAMEPLAY_H + 1, nameColor);
 }

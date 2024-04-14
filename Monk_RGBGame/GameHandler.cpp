@@ -1,28 +1,8 @@
 #include "GameHandler.h"
 
-string STATUS_VAR[] = {
-    "Time: ",
-    "Level: ",
-    "Scores: "
-};
-int STATUS_VAR_SIZE = sizeof(STATUS_VAR) / sizeof(string);
-
-string GUIDEBUTTONS[] =
-{
-    "<P> - Pause/Continue", 
-    "<R> - Reset Game",
-    "<M> - Save Game",
-    "<L> - Load Game",
-    "<Esc> - Return to Main Menu"
-
-};
-int GUIDEBUTTONS_SIZE = sizeof(GUIDEBUTTONS) / sizeof(string);
-
 GameHandler::GameHandler()
 {
     StartUp();
-
-    init();
 }
 
 GameHandler::~GameHandler()
@@ -46,28 +26,36 @@ void GameHandler::init()
 
 }
 
+void GameHandler::subThread() {
+    int buf = 0;
+    while (true) {
+        if (_kbhit())
+            buf = toupper(_getch());
+
+        if (buf == 'P' || buf == 'R' || buf == 'M' || buf == 'L' || buf == ESC)
+            pauseGame();
+
+        Sleep(200);
+    }
+}
+
 void GameHandler::resetData()
 {
-    //removeArts();
-
-    deleteData();
+    system("cls");
 
     player = new Player;
+    player->setPlayer();
     curRoom = new EmptyRoom;
 
-    //level = 0;
-    //score = 0;
+    roomsExplored = 0;
+    isPause = true;
+
 
     START_TIME = clock() / CLOCKS_PER_SEC;
     TIME = 0;
     PAUSE_TIME = 0;
 
     //UnDeadCMD = false;
-
-    //vans.clear();
-    //cars.clear();
-    //birds.clear();
-    //aliens.clear();
 }
 
 void GameHandler::deleteData()
@@ -78,23 +66,32 @@ void GameHandler::deleteData()
 
 void GameHandler::resetGame()
 {
-    resetData();
-
     init();
+
+    resetData();
 }
 
-void GameHandler::startGame()
+void GameHandler::processGame()
 {
-    player->setPlayer();
+    drawGame();
 
-    do
-    {
-        drawGame();
+    isPause = false;
+    thread sub_thread(&GameHandler::subThread, this);
 
-        curRoom->Render();
-        curRoom->processRoom(player);
+    while (true) {
+        curRoom->displayRoomNameAndDesc();
+        if (!curRoom->processRoom(player))
+            break;
 
-    } while (curRoom->getRoomId() == 2);
+        GenerateNewRooms();
+        MoveRoom();
+    }
+}
+
+void GameHandler::pauseGame()
+{
+    PAUSE_TIME = clock() / CLOCKS_PER_SEC;
+    isPause = true;
 }
 
 void GameHandler::drawGame()
@@ -108,73 +105,84 @@ void GameHandler::drawStatus()
     BOX StatusBox(GAMEPLAY_W, 0, STATUS_W, SCREEN_HEIGHT, LIGHTMAGENTA);
     StatusBox.printBox();
 
+    printString(player->getName(), GAMEPLAY_W + midWidth(STATUS_W, player->getName().size()), midHeight(SCREEN_HEIGHT, STATUS_VAR_SIZE + GUIDEBUTTONS_SIZE + 1) * 3 / 5 - 5, player->getPlayerColor());
+
     for (int i = 0; i < STATUS_VAR_SIZE; i++)
-    {
-        GotoXY(GAMEPLAY_W + midWidth(STATUS_W, STATUS_VAR[0].size() + 10), midHeight(SCREEN_HEIGHT, STATUS_VAR_SIZE + GUIDEBUTTONS_SIZE + 1) * 3 / 5 + i * 2);
-        cout << STATUS_VAR[i];
-    }
+        printString(STATUS_VAR[i], GAMEPLAY_W + midWidth(STATUS_W, STATUS_VAR[0].size() + 10), midHeight(SCREEN_HEIGHT, STATUS_VAR_SIZE + GUIDEBUTTONS_SIZE + 1) * 3 / 5 + i * 2);
 
     for (int i = 0; i < GUIDEBUTTONS_SIZE; i++)
-    {
-        GotoXY(GAMEPLAY_W + midWidth(STATUS_W, GUIDEBUTTONS[GUIDEBUTTONS_SIZE - 1]), midHeight(SCREEN_HEIGHT, STATUS_VAR_SIZE + GUIDEBUTTONS_SIZE + 1) * 3 / 2 + i * 2);
-        cout << GUIDEBUTTONS[i];
-    }
+        printString(GUIDEBUTTONS[i], GAMEPLAY_W + midWidth(STATUS_W, GUIDEBUTTONS[GUIDEBUTTONS_SIZE - 1]), midHeight(SCREEN_HEIGHT, STATUS_VAR_SIZE + GUIDEBUTTONS_SIZE + 1) * 3 / 2 + i * 2);
+
+    // Health: 
+    player->displayHealth();
+
+    // Attack:
+    printString(to_string(player->getDamage()), GAMEPLAY_W + midWidth(STATUS_W, STATUS_VAR[0].size() + 10) + STATUS_VAR[0].size(), midHeight(SCREEN_HEIGHT, STATUS_VAR_SIZE + GUIDEBUTTONS_SIZE + 1) * 3 / 5 + 2, player->getPlayerColor());
+
+    // Rooms:
+    printString(to_string(roomsExplored), GAMEPLAY_W + midWidth(STATUS_W, STATUS_VAR[0].size() + 10) + STATUS_VAR[0].size(), midHeight(SCREEN_HEIGHT, STATUS_VAR_SIZE + GUIDEBUTTONS_SIZE + 1) * 3 / 5 + 4, player->getPlayerColor());
+
+
+    //displayCommand();
 }
 
 void GameHandler::drawGUI()
 {
     BOX side[2];
 
-    side[0].setBox(0, 0, GAMEPLAY_W, GAMEPLAY_H, GREEN, BLACK, "GAMEPLAY");
+    side[0].setBox(0, 0, GAMEPLAY_W, GAMEPLAY_H, GREEN, BLACK);
     side[0].printBox();
 
-    side[1].setBox(0, GAMEPLAY_H, GAMEPLAY_W, DESCRIPTION_H, GREEN, BLACK, "DESCRIPTION");
+    side[1].setBox(0, GAMEPLAY_H, GAMEPLAY_W, DESCRIPTION_H, GREEN, BLACK);
     side[1].printBox();
+}
+
+void GameHandler::updateTime()
+{
+    //Only update when the [TIME] fluctuates more than 1 second
+    if (clock() / CLOCKS_PER_SEC - START_TIME - TIME < 1)
+        return;
+
+    TIME = clock() / CLOCKS_PER_SEC - START_TIME;
+
+    GotoXY(GAMEPLAY_W + midWidth(STATUS_W, STATUS_VAR[0].size() + 10) + 3 + STATUS_VAR[0].size(), midHeight(SCREEN_HEIGHT, STATUS_VAR_SIZE + GUIDEBUTTONS_SIZE + 1) * 3 / 5);
+    cout << setfill('0') << setw(2) << TIME / 3600 << ":" << setfill('0') << setw(2) << (TIME / 60) % 60 << ":" << setfill('0') << setw(2) << TIME % 60 << endl;
 }
 
 void GameHandler::GenerateNewRooms() {
     roomsExplored += 1;
 
-    printMessCenter("Generating new room... ");
+    //Update "Explored Rooms" value:
+    printString(to_string(roomsExplored), GAMEPLAY_W + midWidth(STATUS_W, STATUS_VAR[0].size() + 10) + STATUS_VAR[0].size(), midHeight(SCREEN_HEIGHT, STATUS_VAR_SIZE + GUIDEBUTTONS_SIZE + 1) * 3 / 5 + 4, player->getPlayerColor());
 
-    cout << player->getName() << " The Monk has explored " << roomsExplored << " room(s) in the dungeon.\n";
-
-    /*
-       Set the chance of finding a treasure gradually higher, and the chance of finding an empty room to heal lower.
-       This behaviour should encourage an end-game. Whether it be defeat due to a lower chance of healing, or win if
-       the treasure room is found. This prevents the game from running for too long.
-    */
+    //Set the chance of finding a treasure gradually higher
     if (roomsExplored > 10) {
-        TREASURE_ROOM_CHANCE = TREASURE_ROOM_CHANCE + 35;
-        EMPTY_ROOM_CHANCE = EMPTY_ROOM_CHANCE - 14;
-        MONSTER_ROOM_CHANCE = 47;
-        cout << "The Player has explored more than 10 rooms - increasing the chance of treasure rooms.";
+        TREASURE_ROOM_CHANCE += 20;
+        EMPTY_ROOM_CHANCE -= 10;
+        MONSTER_ROOM_CHANCE -= 10;
+        printOnDescriptionCenterAndWait("The Player has explored more than 10 rooms - increasing the chance of treasure rooms.", LIGHTMAGENTA);
     }
     else if (roomsExplored > 5) {
-        TREASURE_ROOM_CHANCE = 15;
-        MONSTER_ROOM_CHANCE = 55;
-        cout << "The Player has explored more than 5 rooms - increasing the chance of treasure rooms slightly";
-    }
+        TREASURE_ROOM_CHANCE += 10;
+        EMPTY_ROOM_CHANCE -= 5;
+        MONSTER_ROOM_CHANCE -= 5;
 
-    cout << "Generating new room....";
+        printOnDescriptionCenterAndWait("The Player has explored more than 5 rooms - increasing the chance of treasure rooms slightly", TREASURE_ROOM_COLOR);
+    }
     
-    int roomChance = generateRand(1, 100);
+    int roomChance = generateRand(0, 100);
     Room* leftRoom, * rightRoom;
 
     if (roomChance < TREASURE_ROOM_CHANCE)
         leftRoom = new TreasureRoom;
-    else if (roomChance < PUZZLE_ROOM_CHANCE)
-        leftRoom = new PuzzleRoom;
     else if (roomChance < EMPTY_ROOM_CHANCE)
         leftRoom = new EmptyRoom;
     else
         leftRoom = new MonsterRoom;
 
-    roomChance = generateRand(1, 100);
+    roomChance = generateRand(0, 100);
     if (roomChance < TREASURE_ROOM_CHANCE)
         rightRoom = new TreasureRoom;
-    else if (roomChance < PUZZLE_ROOM_CHANCE)
-        rightRoom = new PuzzleRoom;
     else if (roomChance < EMPTY_ROOM_CHANCE)
         rightRoom = new EmptyRoom;
     else
@@ -184,291 +192,38 @@ void GameHandler::GenerateNewRooms() {
     curRoom->setRightRoom(rightRoom);
 }
 
+string MOVEROOM_PROMPT[] =
+{
+    "Left",
+    "Right",
+};
+int MOVEROOM_PROMPT_SIZE = sizeof(MOVEROOM_PROMPT) / sizeof(string);
+
 void GameHandler::MoveRoom() {
-    GenerateNewRooms();
+    curRoom->removeRoomName();
 
-    int input = -1;
+    printOnDescriptionCenterAndWait(player->getName() + " The Monk has explored " + to_string(roomsExplored) + " room(s) in the dungeon.");
+    printOnDescriptionCenterAndWait(player->getName() + " the Monk moves on to the next room... ");
+    
+    int box_width = 21;
+    int box_height = 5;
+    MENU moveRoomMenu("Which direction will " + player->getName() + " go next?", MOVEROOM_PROMPT, MOVEROOM_PROMPT_SIZE, midWidth(GAMEPLAY_W, box_width), midHeight(GAMEPLAY_H, box_height * PRAY_PROMPT_SIZE), box_width, box_height, WHITE, BLACK);
 
-    cout << "Which way does " << player->getName() << " go?\n [0] = Left \n [1] = Right \n";
-    while (true) {
-        if (_kbhit()) {
-            input = toupper(_getch());
+    moveRoomMenu.printMenu();
+    int buf = moveRoomMenu.inputMenu();
+    moveRoomMenu.removeMenu();
 
-            if (input == '0' || input == '1')
-                break;
-            else
-                cout << "The Monk realises this isn't a direction..." << endl;
-        }
-    }
-
-    cout << "Go to next room";
-
-    curRoom = (input == '0') ? curRoom->getLeftRoom() : curRoom->getRightRoom();
-
-    switch (curRoom->getRoomId()) {
-    case (0):
-        curRoom->Render();
-        ExploreEmptyRoom();
+    switch (buf)
+    {
+    case 0:
+        curRoom = curRoom->getLeftRoom();
+        printOnDescriptionCenterAndWait("You decided to go to the Left Room");
         break;
-    case (1): 
-        curRoom->Render();
-        BeginCombat();
-        break;
-    case (2): 
-        curRoom->Render(player->getName());
-        break;
-    case (3): 
-        curRoom->Render(player->getName());
-        BeginPuzzle();
+    case 1:
+        curRoom = curRoom->getRightRoom();
+        printOnDescriptionCenterAndWait("You decided to go to the Right Room");
         break;
     }
-}
-
-/**
- * Generate a random room ID.
- * 0 = Empty Room
- * 1 = Monster Room
- * 2 = Treasure Room
- * 3 = Puzzle Room
- *
- * @return The room ID which was generated here.
- */
-
-void GameHandler::BeginCombat() {
-    int turn = 0;
-
-    MonsterRoom* room = (MonsterRoom*)curRoom;
-    Monster* monster = room->getMonster();
-
-    while (room->isMonsterAlive()) {
-        printf("The monster's health is currently: [%d / %d]\n", monster->getHealth(), monster->getBaseHealth());
-        printf("The Monk's Health is currently: [%d / %d]\n", player->getHealth(), PLAYER_BASE_HEALTH);
-        string log = "The Monk's health is currently: ";
-        log += to_string(player->getHealth());
-
-        cout << log;
-        log = "The Monster's health is currently: ";
-        log += to_string(monster->getHealth());
-
-        cout << log;
-        if (turn == 0) {
-            string instruction = "2";
-
-            while (instruction != "0" && instruction != "1") {
-                cout << "What will the all-powerful Monk do? \n [0] = Attack \n [1] = Defend\n";
-                cin >> instruction;
-                if (instruction != "0" && instruction != "1") {
-                    cout << "The Monk didn't understand this instruction!" << endl;
-                }
-            }
-
-            if (instruction == "0") {
-                CombatTryAttack(monster, turn);
-            }
-            else {
-                CombatTryDefend(monster, turn);
-            }
-
-            turn = 1; // Set the turn to the monster.
-        }
-        else {
-
-            if (monster->actionToPerform() == 0) {
-                CombatTryAttack(monster, turn);
-            }
-            else {
-                CombatTryDefend(monster, turn);
-            }
-            if (monster->tryAction()) { // Tries to attack or defend
-
-            }
-            turn = 0; // Set the turn back to the player.
-        }
-    }
-
-    // The Monster has been defeated, allow the player to move on.
-    cout << "The " << monster->getName() << " was defeated by " << player->getName() << " The Monk! \n The Monk moves on to the next room..." << endl;
-    cout << "DEFEAT: Monster was defeated by player";
-
-    MoveRoom();
-}
-
-void GameHandler::ExploreEmptyRoom() {
-    // Initialise the "input" to contains user's input
-    int input = -1;
-
-    // Keep asking the player for the correct instruction. Break out of the loop when it's a 0 or 1.
-    cout << "\n What would you like to do? \n [0] = pray \n [1] = move on" << endl;
-    while (true) {
-        if (_kbhit()) {
-            input = toupper(_getch());
-
-            if (input == '0' || input == '1')
-                break;
-            else
-                cout << "Input unrecognised :( " << endl;
-        }
-    }
-
-    if (input == '0') {
-        player->setHealth(PLAYER_BASE_HEALTH);
-        cout << "Player prayed in empty room: restoring health";
-        printf("Naturally, you sit inside the demonic-looking summoning circle. You're now full health! [%d / %d] \n",
-            player->getHealth(), PLAYER_BASE_HEALTH);
-    }
-
-    // Cast the current room to an EmptyRoom object.
-    EmptyRoom* room = (EmptyRoom*)curRoom;
-
-    if (room->Item()) {
-        cout << "As " << player->getName() << " walks forward, they see a glisten in front of them." << endl;
-        cout << "Generated item inside current room";
-        cout << " What do you do? \n [0] = Pick Up \n [1] = Ignore" << endl;
-
-        input = -1;
-        while (true) {
-            if (_kbhit()) {
-                input = toupper(_getch());
-
-                if (input == '0' || input == '1')
-                    break;
-                else
-                    cout << "The Monk didn't understand that!" << endl;
-            }
-        }
-
-        if (input == '0') {
-            if (generateRand(1, 100) < 21) {
-                cout << "ITEM: Staff of Protection";
-                cout << "You approach the item and pick it up... It's a Staff of Protection! \n During your next combat, the Staff of Protection will block the first attack." << endl;
-                player->setHasProtection(true);
-            }
-            else {
-                cout << "ITEM: sewing needle; subtracting player health";
-                cout << "You approach the item and pick it up... OUCH! It was a sewing needle! \n You lose 1 HP. :( " << endl;
-                player->takeDamage(1);
-            }
-        }
-    }
-
-    cout << player->getName() << " the Monk moves on to the next room..." << endl;
-    MoveRoom();
-}
-
-void GameHandler::CombatTryAttack(Monster* monster, int turn) {
-    if (turn == 0) {
-        if (player->tryAction()) {
-            cout << player->getName() << " the Monk attacks the " << monster->getName() << "!" << endl;
-            cout << "ATTACK: The monk successfully attacked the monster";
-            monster->takeDamage(player->getDamage());
-        }
-        else {
-            cout << "The " << monster->getName() << " dodged " << player->getName() << "'s attack!" << endl;
-            cout << "ATTACK FAILED: The monk failed to attack the monster";
-        }
-    }
-    else {
-        if (monster->tryAction()) {
-            if (player->hasProtection()) {
-                cout << "\n The " << monster->getName() << " tried to attack, but the Staff of Protection blocked the attack from the " << monster->getName() << "!" << endl;
-                cout << "ATTACK BLOCKED: Player had Staff of Protection item";
-                player->setHasProtection(false);
-            }
-            else {
-                cout << "\nThe " << monster->getName() << " strikes " << player->getName() << " the Monk! OUCH!" << endl;
-                cout << "ATTACK: The monster attacked the player - the player had no Protection items";
-                player->takeDamage(monster->getDamage());
-            }
-        }
-        else {
-            cout << "\nThe " << monster->getName() << " failed to attack " << player->getName() << " the Monk!" << endl;
-            cout << "ATTACK FAILED: Monster failed to attack player!";
-        }
-    }
-}
-
-void GameHandler::CombatTryDefend(Monster* monster, int turn) {
-    if (turn == 0) {
-        if (player->tryAction()) {
-            cout << endl;
-            cout << player->getName() << " the Monk defends themselves against the monster, restoring 1 HP." << endl;
-            cout << "DEFEND: The Monk successfully defended, gaining 1 HP.";
-            // If the player does not have max health, increase it by 1. Otherwise, move on.
-            if (player->getHealth() != PLAYER_BASE_HEALTH)
-                player->setHealth(player->getHealth() + 1);
-            else cout << "DEFEND: Failed to increase health: Health was already max!";
-        }
-        else {
-            cout << endl;
-            cout << player->getName() << " the Monk failed to defend against the " << monster->getName() << endl;
-            cout << "The " << monster->getName() << " dealt ";
-            printf("%d damage!\n", monster->getDamage());
-            cout << "DEFEND FAILED: The Monk failed to defend against the monster - taking health away";
-            player->takeDamage(monster->getDamage());
-        }
-    }
-    else {
-        if (monster->tryAction()) {
-            if (monster->getHealth() != monster->getBaseHealth()) {
-                monster->setHealth(monster->getHealth() + 1);
-                cout << "\nThe " << monster->getName() << " defended against " << player->getName() << " the Monk and gained +1 health." << endl;
-                cout << "DEFEND: Monster defended against player";
-            }
-            else {
-                cout << "\nThe " << monster->getName() << " defended itself, but was already full health." << endl;
-                cout << "DEFEND: Monster defended against the player [Full health]";
-            }
-        }
-        else {
-            monster->takeDamage(player->getDamage());
-            cout << "\nThe " << monster->getName() << " failed to defend itself, and " << player->getName() << " exploited this!" << endl;
-            cout << "DEFEND FAILED: Monster failed to defend itself";
-        }
-    }
-}
-
-void GameHandler::BeginPuzzle() {
-    cout << "There seems to be spikes in the floor. If the answer is incorrect, face a painful punishment. If the answer is correct, accept a generous reward." << endl;
-    PuzzleRoom* room = (PuzzleRoom*)curRoom;
-
-    string instruction = "_";
-
-    while (instruction != "0" && instruction != "1") {
-        cout << "Does " << player->getName() << " the Monk accept the challenge? \n [0] = Yes \n [1] = No" << endl;
-        cin >> instruction;
-        if (instruction != "0" && instruction != "1") cout << player->getName() << " realised this wasn't an option!";
-    }
-
-    if (instruction == "0") {
-        cout << "The player chose to answer the question. The question was: ";
-        cout << room->getPuzzle();
-        cout << "The Egyptian writing reads: \n" << endl;
-        cout << room->getPuzzle() << endl;
-
-        cout << "The answer is: ";
-        cout << room->getPuzzleAnswer();
-        string answer;
-        cin >> answer;
-
-        if (answer == room->getPuzzleAnswer()) {
-            cout << "The walls begin to change. The symbols fade away. " << player->getName() << " answered correctly!" << endl;
-            cout << "As the symbols fade, a hole in the wall reveals a Staff of Protection. " << player->getName() << " picks it up!" << endl;
-            cout << "During the next battle, the first attack from a monster will be blocked!" << endl;
-
-            cout << "The answer was correct";
-            player->setHasProtection(true);
-        }
-        else {
-            player->takeDamage(5);
-            cout << "The walls begin to change. The symbols fade away. The floor begins to shake. " << player->getName() << " answered incorrectly!" << endl;
-            printf("The Monk loses 5 HP for their mistake. [%d / %d] \n", player->getHealth(), PLAYER_BASE_HEALTH);
-            cout << "Player answered incorrectly - subtracting 5 HP from the player";
-        }
-    }
-
-    cout << player->getName() << " moves on to the next room..." << endl;
-
-    MoveRoom();
 }
 
 void GameHandler::Main_Menu()
@@ -483,7 +238,7 @@ void GameHandler::Main_Menu()
         system("cls");
 
         //Draw tiltle
-        drawArt(title, title_height, midWidth(SCREEN_WIDTH, title_width), midHeight(SCREEN_HEIGHT / 2, title_height));
+        drawArt(TITLE, TITLE_HEIGHT, midWidth(SCREEN_WIDTH, TITLE_WIDTH), midHeight(SCREEN_HEIGHT / 2, TITLE_HEIGHT));
 
         MainMenu.printMenu();
 
@@ -498,7 +253,7 @@ void GameHandler::Main_Menu()
         case 0: //Play
         {
             system("cls");
-            printMessCenter("LOADING ...");
+            printStringCenter("LOADING ...");
 
             resetGame();
             system("cls");
@@ -506,7 +261,7 @@ void GameHandler::Main_Menu()
             mciSendString(TEXT("stop Menu_Theme"), NULL, 0, NULL);
             mciSendString(TEXT("play Gameplay_Theme from 0 repeat"), NULL, 0, NULL);
 
-            startGame();
+            processGame();
 
             break;
         }
@@ -533,7 +288,7 @@ void GameHandler::Main_Menu()
 
             //displayLeaderBoard();
 
-            toupper(_getch());
+            buf = toupper(_getch());
 
             break;
         }
@@ -574,7 +329,7 @@ void GameHandler::Main_Menu()
         case -1:
         {
             system("cls");
-            printMessCenter("GOOD BYE! :-)", rand() % 15 + 1, BLACK);
+            printStringCenter("GOOD BYE! :-)", rand() % 15 + 1, BLACK);
             Sleep(1000);
 
             //sub.detach();
@@ -693,7 +448,7 @@ int GameHandler::Volumes_Settings()
         if (*flag != NULL)
         {
             system("cls");
-            printMessCenter("Wrong format! Please type in a number", WHITE, RED);
+            printStringCenter("Wrong format! Please type in a number", WHITE, RED);
             waitForKeyBoard();
         }
         else

@@ -17,7 +17,5 @@ public:
 
     bool Item();
 
-    void processRoom(Player* player);
-
-    void Render(string = "");
+    bool processRoom(Player* player);
 };

@@ -1,19 +1,17 @@
 #pragma once
 
 #include "Room.h"
-#include "Monster.h"
+#include "Goblin.h"
+
+extern string ACTION_PROMPT[];
+extern int ACTION_PROMPT_SIZE;
 
 class MonsterRoom : public Room {
 private:
     Monster* monster;
 public:
     MonsterRoom(int monsterId = generateRand(0, 2));
-    Monster* getMonster();
-    bool isMonsterAlive();
+    ~MonsterRoom();
 
-    void CombatTryAttack(Player* player, int turn);
-    void CombatTryDefend(Player* player, int turn);
-
-    void Render(string = "");
-    void processRoom(Player* player);
+    bool processRoom(Player* player);
 };

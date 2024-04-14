@@ -1,41 +1,9 @@
 #include "Monster.h"
 
-Monster::Monster(int monsterId) {
-    // Randomise the monster type. 0 = Troll, 1 = Zombie, 2 = Vampire.
-    // Troll: Health = 4, Attack = 2, Defence = 3
-    // Zombie: Health = 3, Attack = 4, Defence = 1
-    // Vampire: Health = 3, Attack = 2, Defence = 4
-
-    switch (monsterId) {
-    default: // Default to case 0 (Troll monster)
-    case(0):
-        this->setName("Goblin");
-        this->setBaseHealth(10);
-        this->setHealth(this->getBaseHealth());
-        this->setDamage(2);
-        this->setDescription("Groan!");
-        this->attackChance = 30;
-        this->defendChance = 70;
-        break;
-    case(1):
-        this->setName("Zombie");
-        this->setBaseHealth(8);
-        this->setHealth(this->getBaseHealth());
-        this->setDamage(3);
-        this->setDescription("Blurrrrrghhh!");
-        this->attackChance = 95;
-        this->defendChance = 5;
-        break;
-    case(2):
-        this->setName("Vampire");
-        this->setBaseHealth(12);
-        this->setHealth(this->getBaseHealth());
-        this->setDamage(2);
-        this->setDescription("Mwuahahahaha!");
-        this->defendChance = 65;
-        this->attackChance = 35;
-        break;
-    }
+Monster::Monster() {
+    name = description = "";
+    monsterColor = WHITE;
+    health = baseHealth = damage = cancel_chance = attack_chance = 0;
 }
 
 int Monster::getHealth() { 
@@ -47,14 +15,14 @@ void Monster::setHealth(int h) {
 }
 
 int Monster::getBaseHealth() { 
-    return totalHealth; 
+    return baseHealth; 
 }
 
 void Monster::setBaseHealth(int base) {
-    totalHealth = base; 
+    baseHealth = base; 
 }
 
-void Monster::takeDamage(int amount) { 
+void Monster::takeDamage(int amount) {
     health -= amount; 
 }
 
@@ -62,7 +30,7 @@ void Monster::setName(string monsterName) {
     name = monsterName; 
 }
 
-string Monster::getName() { 
+string Monster::getName() {
     return name; 
 }
 
@@ -78,22 +46,48 @@ string Monster::getDescription() {
     return description; 
 }
 
+int Monster::getMonsterColor()
+{
+    return monsterColor;
+}
+
 void Monster::setDescription(string noise) { 
     description = noise; 
 }
 
+void Monster::setMonsterColor(int monsterColor)
+{
+    this->monsterColor = monsterColor;
+}
+
 /**
- * Try to complete an action, such as attacking or defending from a monster.
+ * Try to cancel an action, such as attacking or defending.
  * tryAction generates a number between 0 or 1, determining whether the action attempted was successful.
  * 0 = unsuccessful
  * 1 = successful
  *
  * @return Boolean of whether the action was successful or not.
  */
-bool Monster::tryAction() {
-    return generateRand(0, 1) == 1;
+bool Monster::tryCancelAction() {
+    return (generateRand(0, 100) < cancel_chance) ? true : false;
 }
 
 int Monster::actionToPerform() {
-    return (generateRand(0, 100) < this->attackChance) ? 0 : 1;
+    return (generateRand(0, 100) < attack_chance) ? 0 : 1;
+}
+
+bool Monster::isAlive() {
+    return health > 0;
+}
+
+void Monster::displayHealth()
+{
+    string monster_health = name + ": [" + to_string(health) + " / " + to_string(baseHealth) + "]";
+    printString(monster_health, midWidth(GAMEPLAY_W, monster_health.size()), GAMEPLAY_H + DESCRIPTION_H * 1 / 4, monsterColor);
+}
+
+void Monster::removeHealth()
+{
+    string monster_health = name + ": [" + to_string(health) + " / " + to_string(baseHealth) + "]";
+    printString(string(monster_health.size(), ' '), midWidth(GAMEPLAY_W, monster_health.size()), GAMEPLAY_H + DESCRIPTION_H * 1 / 4);
 }

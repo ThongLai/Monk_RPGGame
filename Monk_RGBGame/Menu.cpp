@@ -30,6 +30,7 @@ MENU::MENU(string _title, string* content, int _n, int _x, int _y, int _width, i
 {
 	nBox = new BOX[n];
 	setMenu(_title, content, _n, _x, _y, _width, _height, _text_color, _bg_color);
+	setTitlePosition(_x, _y);
 }
 
 MENU::~MENU()
@@ -78,6 +79,12 @@ void MENU::setTitle(string _title)
 	title = _title;
 }
 
+void MENU::setTitlePosition(int x, int y)
+{
+	this->x_title = x + midWidth(width, title);
+	this->y_title = y - height;
+}
+
 void MENU::printMenu()
 {
 	printTitle();
@@ -91,8 +98,17 @@ void MENU::printTitle()
 	Status SavedState;
 	SetTextColor(DefineColor(text_color, bg_color));
 
-	GotoXY(x + midWidth(width, title), y - height);
+	GotoXY(x_title, y_title);
 	cout << title;
+}
+
+void MENU::removeMenu()
+{
+	for (int i = 0; i < n; i++)
+ 		nBox[i].removeBox();
+
+	GotoXY(x_title, y_title);
+	cout << string(title.length(), ' ');
 }
 
 void MENU::selectedBox(int index)
