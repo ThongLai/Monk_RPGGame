@@ -57,8 +57,6 @@ extern int GAMEPLAY_W;
 extern int GAMEPLAY_H;
 extern int DESCRIPTION_H;
 extern int STATUS_W;
-extern int SAVE_SIZE;
-extern int LEADERBOARD_SIZE;
 
 extern int BUF;
 extern string CHEATCODE;
@@ -130,6 +128,7 @@ int midHeight(int height, int content_height);
 
 void printString(string message, int X, int Y, int text_color = WHITE, int bg_color = BLACK);
 void printStringCenter(string message, int text_color = WHITE, int bg_color = BLACK);
+void printStringCenterGameplay(string message, int text_color = WHITE, int bg_color = BLACK);
 void removeString(string message, int X, int Y);
 void removeStringCenter(string message);
 
@@ -141,10 +140,6 @@ void printOnGameplayCenterAndWait(string prompt, int text_color = WHITE, int bg_
 
 void waitForKeyBoard(int X = SCREEN_WIDTH / 20, int Y = SCREEN_HEIGHT / 20);
 string waitForInput(string prompt, int X, int Y, int text_color = WHITE, int bg_color = BLACK);
-
-// Sounds and Musics
-void SetAllVolumes(int volume);
-
 
 //Save status of coordinates and text/background color
 class Status

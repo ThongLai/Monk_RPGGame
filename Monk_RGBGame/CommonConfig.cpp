@@ -25,8 +25,6 @@ int GAMEPLAY_W;
 int GAMEPLAY_H;
 int DESCRIPTION_H;
 int STATUS_W;
-int SAVE_SIZE;
-int LEADERBOARD_SIZE;
 
 int BUF;
 string CHEATCODE = "THONG";
@@ -52,7 +50,7 @@ int CACTUS_CHANCE = 50;
 int PLAYER_COLOR = LIGHTCYAN;
 int PLAYER_BASE_HEALTH = 15;
 int PLAYER_BASE_DAMAGE = 3;
-int PLAYER_CANCEL_ACTION_CHANCE = 15;
+int PLAYER_CANCEL_ACTION_CHANCE = 50;
 
 // Goblin: Health = 10, Attack = 3, Cancel Chance = 15, ATK/DEF Chance = 30
 int GOBLIN_COLOR = GREEN;
@@ -61,8 +59,8 @@ int GOBLIN_BASE_DAMAGE = 2;
 int GOBLIN_CANCEL_ACTION_CHANCE = 15;
 int GOBLIN_ATK_DEF_CHANCE = 30;
 
-// Chupacabra: Health = 15, Attack = 4, Cancel Chance = 30, ATK/DEF Chance = 50
-int CHUPACABRA_COLOR = LIGHTMAGENTA;
+// Chupacabra: Health = 20, Attack = 4, Cancel Chance = 30, ATK/DEF Chance = 50
+int CHUPACABRA_COLOR = DARKGRAY;
 int CHUPACABRA_BASE_HEALTH = 15;
 int CHUPACABRA_BASE_DAMAGE = 4;
 int CHUPACABRA_CANCEL_ACTION_CHANCE = 30;
@@ -115,10 +113,6 @@ void SetUpParameters()
     GAMEPLAY_H = int(0.75 * SCREEN_HEIGHT);
     DESCRIPTION_H = SCREEN_HEIGHT - GAMEPLAY_H;
     STATUS_W = SCREEN_WIDTH - GAMEPLAY_W;
-    LEADERBOARD_SIZE = int(SCREEN_HEIGHT * 0.8 / 3 - 1);
-    LEADERBOARD_SIZE = SCREEN_HEIGHT * 0.8 / 3 - 1;
-    SAVE_SIZE = int(SCREEN_HEIGHT * 0.8 / 5 - 3);
-    SAVE_SIZE = SCREEN_HEIGHT * 0.8 / 5 - 3;
 }
 
 void FullScreenMode()
@@ -202,6 +196,11 @@ void printString(string message, int X, int Y, int text_color, int bg_color)
 
 void printStringCenter(string message, int text_color, int bg_color)
 {
+    printString(message, midWidth(SCREEN_WIDTH, message), midHeight(SCREEN_HEIGHT, 1));
+}
+
+void printStringCenterGameplay(string message, int text_color, int bg_color)
+{
     printString(message, midWidth(GAMEPLAY_W, message), midHeight(GAMEPLAY_H, 1));
 }
 
@@ -263,24 +262,6 @@ string waitForInput(string prompt, int X, int Y, int text_color, int bg_color)
 
     return input;
 }
-
-
-
-// Sounds and Musics
-void SetAllVolumes(int volume)
-{
-    mciSendStringA(string("setaudio Menu_Theme volume to " + to_string(volume)).c_str(), NULL, 0, NULL);
-    mciSendStringA(string("setaudio Gameplay_Theme volume to " + to_string(volume)).c_str(), NULL, 0, NULL);
-    mciSendStringA(string("setaudio Van_Crash volume to " + to_string(volume)).c_str(), NULL, 0, NULL);
-    mciSendStringA(string("setaudio Car_Crash volume to " + to_string(volume)).c_str(), NULL, 0, NULL);
-    mciSendStringA(string("setaudio Alien_Crash volume to " + to_string(volume)).c_str(), NULL, 0, NULL);
-    mciSendStringA(string("setaudio Bird_Crash volume to " + to_string(volume)).c_str(), NULL, 0, NULL);
-    mciSendStringA(string("setaudio Menu_Select volume to " + to_string(volume)).c_str(), NULL, 0, NULL);
-    mciSendStringA(string("setaudio Plus_Point volume to " + to_string(volume)).c_str(), NULL, 0, NULL);
-    mciSendStringA(string("setaudio Next_Level volume to " + to_string(volume)).c_str(), NULL, 0, NULL);
-    mciSendStringA(string("setaudio Finish_Game volume to " + to_string(volume)).c_str(), NULL, 0, NULL);
-}
-
 
 /// Status class defnitions
 Status::Status()

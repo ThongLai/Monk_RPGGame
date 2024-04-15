@@ -15,5 +15,6 @@ public:
     MonsterRoom(int monsterId = generateRand(0, 2));
     ~MonsterRoom();
 
+    bool processActions(Entity *E1, Entity *E2, int E1_action, int E2_action);
     bool processRoom(Player* player);
 };

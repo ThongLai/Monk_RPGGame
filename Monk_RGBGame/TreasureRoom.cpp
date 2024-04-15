@@ -62,10 +62,10 @@ bool TreasureRoom::processRoom(Player* player) {
             );
 
             string prompt = "It's WEIRD that you choose to ignore the Treasure";
-            printStringCenter(prompt);
+            printStringCenterGameplay(prompt);
             removeStringCenter(prompt);
 
-            printOnDescriptionCenterAndWait("Oh well... you are probably an adventurous person. Let continue then!", player->getPlayerColor());
+            printOnDescriptionCenterAndWait("Oh well... you are probably an adventurous person. Let continue then!", player->getColor());
             return true;
         }
     }

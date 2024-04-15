@@ -24,14 +24,6 @@ private:
 
     int roomsExplored;
 
-    //Timer indices
-    clock_t START_TIME;
-    clock_t TIME;
-    clock_t PAUSE_TIME;
-
-    //Pause game process
-    bool isPause;
-
     //Catch other buttons from the keyboard to check whether it is a command or not
     string buf;
 public:
@@ -47,12 +39,10 @@ public:
 
     void resetGame(); //Operate the reset game process
     void processGame(); 
-    void pauseGame();
 
     void drawGame(); //Wrap function to call all draw functions
     void drawStatus();
     void drawGUI();
-    void updateTime();
     void checkUnDeadCMD(); //Check whether the player types a command or not
     void addBuf(char key); //Catch a key from keyboard
     void displayCommand();
@@ -66,5 +56,4 @@ public:
     void Main_Menu();
     void Settings_Menu();
     int WindowMode_Settings();
-    int Volumes_Settings();
 };

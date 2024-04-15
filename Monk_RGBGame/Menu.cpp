@@ -3,11 +3,7 @@
 string MAINMENU[] =
 {
 	"Play",
-	"Load Game",
-	"Leader Board",
-	"Instruction",
 	"Settings",
-	"Credits",
 	"Quit",
 };
 int MAINMENU_SIZE = sizeof(MAINMENU) / sizeof(string);
@@ -15,7 +11,6 @@ int MAINMENU_SIZE = sizeof(MAINMENU) / sizeof(string);
 string SETTINGS[] =
 {
 	"Window",
-	"Audio",
 	"Return"
 };
 int SETTINGS_SIZE = sizeof(SETTINGS) / sizeof(string);
@@ -24,6 +19,7 @@ int SETTINGS_SIZE = sizeof(SETTINGS) / sizeof(string);
 //MENU
 MENU::MENU() : n(1), title("") {
 	nBox = new BOX[n];
+	x_title = y_title = 0;
 }
 
 MENU::MENU(string _title, string* content, int _n, int _x, int _y, int _width, int _height, int _text_color, int _bg_color) : n(_n)
@@ -44,6 +40,7 @@ void MENU::setMenu(string _title, string* _content, int _n, int _x, int _y, int 
 	setBox(_x, _y, _width, _height, _text_color, _bg_color);
 	setBoxContent(_content);
 	setTitle(_title);
+	setTitlePosition(_x, _y);
 }
 
 void MENU::setBox(int _x, int _y, int _width, int _height, int _text_color, int _bg_color)

@@ -5,6 +5,7 @@ MonsterRoom::MonsterRoom(int monsterId) : Room("Monster Room", MONTER_ROOM_COLOR
 
     // Randomise the monster. 0 = Goblin, 1 = Chupacabra, 2 = Foot.
     switch (monsterId) {
+    default:
     case(0):
         monster = new Goblin;
         break;
@@ -29,13 +30,74 @@ string ACTION_PROMPT[] =
 };
 int ACTION_PROMPT_SIZE = sizeof(ACTION_PROMPT) / sizeof(string);
 
+bool MonsterRoom::processActions(Entity *E1, Entity *E2, int E1_action, int E2_action)
+{
+
+    if (E1_action == 0) // E1 Attack 
+    {
+        printOnDescriptionCenterAndWait(E1->getName() + " ATTACKED " + E2->getName() + "!", E1->getColor());
+
+        if (E2_action == 1) {
+            printOnDescriptionCenterAndWait(E2->getName() + " DEFENDED " + E1->getName() + "'s attack!", E2->getColor());
+
+            if (E1->tryCancelAction()) {// E2 Defend
+
+                printOnDescriptionCenterAndWait(E2->getName() + " FAILED to DEFEND against " + E1->getName(), E2->getColor());
+
+                E2->removeHealth();
+                E2->takeDamage(E1->getDamage());
+                E2->displayHealth();
+
+                printOnDescriptionCenterAndWait(E1->getName() + " dealt " + to_string(E1->getDamage()) + " damage!", E1->getColor());
+
+                if (!E2->isAlive())
+                    return false;
+            }
+            else {
+                E2->removeHealth();
+                E2->setHealth(E2->getHealth() + 1);
+                E2->displayHealth();
+
+                printOnDescriptionCenterAndWait(E2->getName() + " RECOVERED 1 HP from DEFENDING " + E1->getName() + "'s attack!", E2->getColor());
+            }
+        }
+        else if (E2->tryCancelAction())
+            printOnDescriptionCenterAndWait(E2->getName() + " DODGED " + E1->getName() + "'s attack!", E2->getColor());
+        else {
+            E2->removeHealth();
+            E2->takeDamage(E1->getDamage());
+            E2->displayHealth();
+
+            printOnDescriptionCenterAndWait(E1->getName() + " dealt " + to_string(E1->getDamage()) + " damage!", E1->getColor());
+
+            if (!E2->isAlive())
+                return false;
+        }
+    }
+    else if (E2_action == 1) { // E1 Defend, E2 Defend
+        printOnDescriptionCenterAndWait(E1->getName() + " tried to DEFEND " + E2->getName() + "'s attack", E1->getColor());
+
+        if (E2->tryCancelAction())
+            printOnDescriptionCenterAndWait(E1->getName() + " FAILED to DEFEND against " + E2->getName(), E1->getColor());
+        else {
+            E1->removeHealth();
+            E1->setHealth(E1->getHealth() + 1);
+            E1->displayHealth();
+
+            printOnDescriptionCenterAndWait(E1->getName() + " RECOVERED 1 HP by DEFENDING", E1->getColor());
+        }
+    }
+
+    return true;
+}
+
 bool MonsterRoom::processRoom(Player* player) {
     drawArt(
         monster->getArtModel(),
         monster->getArtHeight(),
         midWidth(GAMEPLAY_W, monster->getArtWidth()),
         midHeight(GAMEPLAY_H, monster->getArtHeight()),
-        monster->getMonsterColor()
+        monster->getColor()
     );
 
     monster->displayHealth();
@@ -54,80 +116,10 @@ bool MonsterRoom::processRoom(Player* player) {
         actionMenu.removeMenu();
         int monster_action = monster->actionToPerform();
 
-
-        if (player_action == 0) // Player Attack 
-        {
-            printOnDescriptionCenterAndWait(player->getName() + " the Monk ATTACKED " + monster->getName() + "!", player->getPlayerColor());
-
-            if (monster_action == 1) {
-                printOnDescriptionCenterAndWait(monster->getName() + " DEFENDED " + player->getName() + "'s attack!", monster->getMonsterColor());
-
-                if (player->tryCancelAction()) {// Monster Defend
-
-                    printOnDescriptionCenterAndWait(monster->getName() + " FAILED to DEFEND against " + player->getName(), monster->getMonsterColor());
-
-                    monster->removeHealth();
-                    monster->takeDamage(player->getDamage());
-                    monster->displayHealth();
-
-                    printOnDescriptionCenterAndWait(player->getName() + " dealt " + to_string(player->getDamage()) + " damage!", player->getPlayerColor());
-
-                    if (!monster->isAlive())
-                        break;
-                }
-            }
-            else if (monster->tryCancelAction())
-                printOnDescriptionCenterAndWait(monster->getName() + " DODGED " + player->getName() + "'s attack!", monster->getMonsterColor());
-            else {
-                monster->removeHealth();
-                monster->takeDamage(player->getDamage());
-                monster->displayHealth();
-
-                printOnDescriptionCenterAndWait(player->getName() + " dealt " + to_string(player->getDamage()) + " damage!", player->getPlayerColor());
-                
-                if (!monster->isAlive())
-                    break;
-            }
-        }
-        else if (monster_action == 1)
-            printOnDescriptionCenterAndWait(player->getName() + " tried to DEFEND " + monster->getName() + "'s attack!", player->getPlayerColor());
-
-        if (monster_action == 0) // Monster Attack 
-        {
-            printOnDescriptionCenterAndWait(monster->getName() + " ATTACKED " + player->getName() + "!", monster->getMonsterColor());
-
-            if (player_action == 1) {
-                printOnDescriptionCenterAndWait(player->getName() + " DEFENDED " + monster->getName() + "'s attack!", player->getPlayerColor());
-
-                if (monster->tryCancelAction()) {
-                    printOnDescriptionCenterAndWait(player->getName() + " FAILED to DEFEND against " + monster->getName(), player->getPlayerColor());
-
-                    player->removeHealth();
-                    player->takeDamage(monster->getDamage());
-                    player->displayHealth();
-
-                    printOnDescriptionCenterAndWait(monster->getName() + " dealt " + to_string(monster->getDamage()) + " damage!", monster->getMonsterColor());
-                    
-                    if (!player->isAlive())
-                        break;
-                }
-            }
-            else if (player->tryCancelAction())
-                printOnDescriptionCenterAndWait(player->getName() + " DODGED " + monster->getName() + "'s attack!", player->getPlayerColor());
-            else {
-
-                player->removeHealth();
-                player->takeDamage(monster->getDamage());
-                player->displayHealth();
-
-                printOnDescriptionCenterAndWait(monster->getName() + " dealt " + to_string(monster->getDamage()) + " damage!", monster->getMonsterColor());
-                
-                if (!player->isAlive())
-                    break;
-            }
-        }
-        else if (player_action == 1)
-            printOnDescriptionCenterAndWait(monster->getName() + " tried to DEFEND " + player->getName() + "'s attack!", monster->getMonsterColor());
+        if (!processActions(player, monster, player_action, monster_action))
+            break;
+        if (!processActions(monster, player, monster_action, player_action))
+            break;
     }
 
     removeArt(
@@ -141,7 +133,7 @@ bool MonsterRoom::processRoom(Player* player) {
 
     if (player->isAlive()) {
         // The Monster has been defeated, allow the player to move on.
-        printOnGameplayCenterAndWait(monster->getName() + " was defeated by " + player->getName() + " The Monk!", player->getPlayerColor());
+        printOnGameplayCenterAndWait(monster->getName() + " was defeated by " + player->getName() + " The Monk!", player->getColor());
         return true;
     }
     else {

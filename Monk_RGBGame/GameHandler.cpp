@@ -21,11 +21,6 @@ void GameHandler::StartUp()
     SetUpParameters();
 }
 
-void GameHandler::init()
-{
-
-}
-
 void GameHandler::subThread() {
     int key = 0;
     while (true) {
@@ -37,21 +32,11 @@ void GameHandler::subThread() {
 
 void GameHandler::resetData()
 {
-    system("cls");
-
     player = new Player;
     player->setPlayer();
     curRoom = new EmptyRoom;
 
     roomsExplored = 0;
-    isPause = true;
-
-
-    START_TIME = clock() / CLOCKS_PER_SEC;
-    TIME = 0;
-    PAUSE_TIME = 0;
-
-    //UnDeadCMD = false;
 }
 
 void GameHandler::deleteData()
@@ -62,8 +47,6 @@ void GameHandler::deleteData()
 
 void GameHandler::resetGame()
 {
-    init();
-
     resetData();
 }
 
@@ -71,7 +54,6 @@ void GameHandler::processGame()
 {
     drawGame();
 
-    isPause = false;
     thread sub_thread(&GameHandler::subThread, this);
 
     while (true) {
@@ -86,12 +68,6 @@ void GameHandler::processGame()
     sub_thread.detach();
 }
 
-void GameHandler::pauseGame()
-{
-    PAUSE_TIME = clock() / CLOCKS_PER_SEC;
-    isPause = true;
-}
-
 void GameHandler::drawGame()
 {
     drawStatus();
@@ -103,13 +79,13 @@ void GameHandler::drawStatus()
     BOX StatusBox(GAMEPLAY_W, 0, STATUS_W, SCREEN_HEIGHT, LIGHTMAGENTA);
     StatusBox.printBox();
 
-    printString(player->getName(), GAMEPLAY_W + midWidth(STATUS_W, player->getName().size()), midHeight(SCREEN_HEIGHT, STATUS_VAR_SIZE + GUIDEBUTTONS_SIZE + 1) * 3 / 5 - 5, player->getPlayerColor());
+    printString(player->getName(), GAMEPLAY_W + midWidth(STATUS_W, player->getName().size()), midHeight(SCREEN_HEIGHT, STATUS_VAR_SIZE + GUIDEBUTTONS_SIZE + 1) * 3 / 5 - 5, player->getColor());
 
     for (int i = 0; i < STATUS_VAR_SIZE; i++)
         printString(STATUS_VAR[i], GAMEPLAY_W + midWidth(STATUS_W, STATUS_VAR[0].size() + 10), midHeight(SCREEN_HEIGHT, STATUS_VAR_SIZE + GUIDEBUTTONS_SIZE + 1) * 3 / 5 + i * 2);
 
-    for (int i = 0; i < GUIDEBUTTONS_SIZE; i++)
-        printString(GUIDEBUTTONS[i], GAMEPLAY_W + midWidth(STATUS_W, GUIDEBUTTONS[GUIDEBUTTONS_SIZE - 1]), midHeight(SCREEN_HEIGHT, STATUS_VAR_SIZE + GUIDEBUTTONS_SIZE + 1) * 3 / 2 + i * 2);
+    //for (int i = 0; i < GUIDEBUTTONS_SIZE; i++)
+    //    printString(GUIDEBUTTONS[i], GAMEPLAY_W + midWidth(STATUS_W, GUIDEBUTTONS[GUIDEBUTTONS_SIZE - 1]), midHeight(SCREEN_HEIGHT, STATUS_VAR_SIZE + GUIDEBUTTONS_SIZE + 1) * 3 / 2 + i * 2);
 
     // Health: 
     player->displayHealth();
@@ -118,9 +94,7 @@ void GameHandler::drawStatus()
     player->displayDamage();
 
     // Rooms:
-    printString(to_string(roomsExplored), GAMEPLAY_W + midWidth(STATUS_W, STATUS_VAR[0].size() + 10) + STATUS_VAR[0].size(), midHeight(SCREEN_HEIGHT, STATUS_VAR_SIZE + GUIDEBUTTONS_SIZE + 1) * 3 / 5 + 4, player->getPlayerColor());
-
-    //displayCommand();
+    printString(to_string(roomsExplored), GAMEPLAY_W + midWidth(STATUS_W, STATUS_VAR[0].size() + 10) + STATUS_VAR[0].size(), midHeight(SCREEN_HEIGHT, STATUS_VAR_SIZE + GUIDEBUTTONS_SIZE + 1) * 3 / 5 + 4, player->getColor());
 }
 
 void GameHandler::drawGUI()
@@ -132,18 +106,6 @@ void GameHandler::drawGUI()
 
     side[1].setBox(0, GAMEPLAY_H, GAMEPLAY_W, DESCRIPTION_H, LIGHTGREEN, BLACK);
     side[1].printBox();
-}
-
-void GameHandler::updateTime()
-{
-    //Only update when the [TIME] fluctuates more than 1 second
-    if (clock() / CLOCKS_PER_SEC - START_TIME - TIME < 1)
-        return;
-
-    TIME = clock() / CLOCKS_PER_SEC - START_TIME;
-
-    GotoXY(GAMEPLAY_W + midWidth(STATUS_W, STATUS_VAR[0].size() + 10) + 3 + STATUS_VAR[0].size(), midHeight(SCREEN_HEIGHT, STATUS_VAR_SIZE + GUIDEBUTTONS_SIZE + 1) * 3 / 5);
-    cout << setfill('0') << setw(2) << TIME / 3600 << ":" << setfill('0') << setw(2) << (TIME / 60) % 60 << ":" << setfill('0') << setw(2) << TIME % 60 << endl;
 }
 
 void GameHandler::checkUnDeadCMD()
@@ -186,7 +148,7 @@ void GameHandler::GenerateNewRooms() {
     roomsExplored += 1;
 
     //Update "Explored Rooms" value:
-    printString(to_string(roomsExplored), GAMEPLAY_W + midWidth(STATUS_W, STATUS_VAR[0].size() + 10) + STATUS_VAR[0].size(), midHeight(SCREEN_HEIGHT, STATUS_VAR_SIZE + GUIDEBUTTONS_SIZE + 1) * 3 / 5 + 4, player->getPlayerColor());
+    printString(to_string(roomsExplored), GAMEPLAY_W + midWidth(STATUS_W, STATUS_VAR[0].size() + 10) + STATUS_VAR[0].size(), midHeight(SCREEN_HEIGHT, STATUS_VAR_SIZE + GUIDEBUTTONS_SIZE + 1) * 3 / 5 + 4, player->getColor());
 
     //Set the chance of finding a treasure gradually higher
     if (roomsExplored == 10) {
@@ -272,9 +234,6 @@ void GameHandler::Main_Menu()
 
         MainMenu.printMenu();
 
-        //Play menu theme
-        mciSendString(TEXT("play Menu_Theme repeat"), NULL, 0, NULL);
-
         //Take input from player
         buf = MainMenu.inputMenu();
 
@@ -282,59 +241,16 @@ void GameHandler::Main_Menu()
         {
         case 0: //Play
         {
-            system("cls");
             printStringCenter("LOADING ...");
 
-            resetGame();
             system("cls");
 
-            mciSendString(TEXT("stop Menu_Theme"), NULL, 0, NULL);
-            mciSendString(TEXT("play Gameplay_Theme from 0 repeat"), NULL, 0, NULL);
-
+            resetGame();
             processGame();
 
             break;
         }
-        case 1: //Load Game
-        {
-            system("cls");
-
-            //game.loadGame();
-            system("cls");
-
-            //if (!game.isPlaying())
-            //	continue;
-
-            mciSendString(TEXT("stop Menu_Theme"), NULL, 0, NULL);
-            mciSendString(TEXT("play Gameplay_Theme from 0 repeat"), NULL, 0, NULL);
-
-            //game.resumeThread();
-
-            break;
-        }
-        case 2: //Leader Board
-        {
-            system("cls");
-
-            //displayLeaderBoard();
-
-            buf = toupper(_getch());
-
-            break;
-        }
-        case 3: //Instruction
-        {
-            system("cls");
-
-            //drawInstruction();
-
-            do {
-                buf = toupper(_getch());
-            } while (buf != ESC && buf != ENTER);
-
-            break;
-        }
-        case 4://Settings
+        case 1://Settings
         {
             system("cls");
 
@@ -343,26 +259,13 @@ void GameHandler::Main_Menu()
             MainMenu.setMenu("MAIN MENU", MAINMENU, MAINMENU_SIZE, midWidth(SCREEN_WIDTH, box_width), midHeight(SCREEN_HEIGHT * 3 / 2, box_height * MAINMENU_SIZE), box_width, box_height, WHITE, BLACK);
             break;
         }
-        case 5: //Credits
-        {
-            system("cls");
-
-            //drawCredits();
-
-            do {
-                buf = toupper(_getch());
-            } while (buf != ESC && buf != ENTER);
-
-            break;
-        }
-        case 6: //Quit
+        case 2: //Quit
         case -1:
         {
             system("cls");
             printStringCenter("GOOD BYE! :-)", rand() % 15 + 1, BLACK);
             Sleep(1000);
 
-            //sub.detach();
             return;
         }
         }
@@ -382,6 +285,7 @@ void GameHandler::Settings_Menu()
         system("cls");
         settingsMenu.printMenu();
         int buf = settingsMenu.inputMenu();
+        settingsMenu.removeMenu();
 
         switch (buf)
         {
@@ -407,15 +311,6 @@ void GameHandler::Settings_Menu()
             break;
         }
         case 1:
-        {
-            // AUDIO SETTINGS
-            buf = Volumes_Settings();
-
-            SetAllVolumes(buf);
-
-            break;
-        }
-        case 2:
         case -1:
             return;
         }
@@ -446,45 +341,4 @@ int GameHandler::WindowMode_Settings()
     askWindow.printMenu();
 
     return askWindow.inputMenu();
-}
-
-int GameHandler::Volumes_Settings()
-{
-    string audio_title = "AUDIO SETTINGS";
-    string guide1 = "-----Volume Range: [1 - 1000]-----";
-    string guide2 = "--Type [-1] to Cancel--";
-    BOX Title[3];
-    Title[0].setBox(midWidth(SCREEN_WIDTH, audio_title.size() + 10), SCREEN_HEIGHT / 20, audio_title.size() + 10, 3, YELLOW, BLACK, audio_title);
-    Title[1].setBox(midWidth(SCREEN_WIDTH, guide1.size()), SCREEN_HEIGHT * 4 / 20, guide1.size(), 3, LIGHTCYAN, BLACK, guide1);
-    Title[2].setBox(midWidth(SCREEN_WIDTH, guide2.size()), SCREEN_HEIGHT * 6 / 20, guide2.size(), 3, LIGHTCYAN, BLACK, guide2);
-
-    int volume = 0;
-
-    string input;
-    while (true) {
-        system("cls");
-
-        Title[0].printBox();
-        Title[1].printContent();
-        Title[2].printContent();
-
-        GotoXY(midWidth(SCREEN_WIDTH, "Enter Volume Number: "), midHeight(SCREEN_HEIGHT, 1));
-        cout << "Enter Volume Number: ";
-
-        getline(cin, input);
-        char* flag = NULL;
-        volume = strtol(input.c_str(), &flag, 10);
-
-        if (*flag != NULL)
-        {
-            system("cls");
-            printStringCenter("Wrong format! Please type in a number", WHITE, RED);
-            waitForKeyBoard();
-        }
-        else
-            break;
-    }
-
-
-    return volume;
 }

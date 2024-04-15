@@ -1,21 +1,10 @@
 #include "Monster.h"
 
-Monster::Monster() {
-    name = description = "";
-    monsterColor = WHITE;
-    health = baseHealth = damage = cancel_chance = attack_chance = 0;
-}
-
-int Monster::getHealth() { 
-    return health; 
-}
-
-void Monster::setHealth(int h) {
-    health = h; 
-}
-
-int Monster::getBaseHealth() { 
-    return baseHealth; 
+Monster::Monster() : Entity()
+{
+    artModel = NULL;
+    artHeight = artWidth = 0;
+    attack_chance = 0;
 }
 
 string* Monster::getArtModel()
@@ -33,10 +22,6 @@ int Monster::getArtWidth()
     return artWidth;
 }
 
-void Monster::setBaseHealth(int base) {
-    baseHealth = base; 
-}
-
 void Monster::setArtModel(string* artModel)
 {
     this->artModel = artModel;
@@ -52,72 +37,11 @@ void Monster::setArtWidth(int artWidth)
     this->artWidth = artWidth;
 }
 
-void Monster::takeDamage(int amount) {
-    health -= amount; 
-}
-
-void Monster::setName(string monsterName) { 
-    name = monsterName; 
-}
-
-string Monster::getName() {
-    return name; 
-}
-
-void Monster::setDamage(int attack) { 
-    damage = attack; 
-}
-
-int Monster::getDamage() { 
-    return damage; 
-}
-
-string Monster::getDescription() { 
-    return description; 
-}
-
-int Monster::getMonsterColor()
+void Monster::setAttackChance(int attack_chance)
 {
-    return monsterColor;
-}
-
-void Monster::setDescription(string noise) { 
-    description = noise; 
-}
-
-void Monster::setMonsterColor(int monsterColor)
-{
-    this->monsterColor = monsterColor;
-}
-
-/**
- * Try to cancel an action, such as attacking or defending.
- * tryAction generates a number between 0 or 1, determining whether the action attempted was successful.
- * 0 = unsuccessful
- * 1 = successful
- *
- * @return Boolean of whether the action was successful or not.
- */
-bool Monster::tryCancelAction() {
-    return (generateRand(0, 100) < cancel_chance) ? true : false;
+    this->attack_chance = attack_chance;
 }
 
 int Monster::actionToPerform() {
     return (generateRand(0, 100) < attack_chance) ? 0 : 1;
-}
-
-bool Monster::isAlive() {
-    return health > 0;
-}
-
-void Monster::displayHealth()
-{
-    string monster_health = name + ": [" + to_string(health) + " / " + to_string(baseHealth) + "]";
-    printString(monster_health, midWidth(GAMEPLAY_W, monster_health.size()), GAMEPLAY_H + DESCRIPTION_H * 1 / 4, monsterColor);
-}
-
-void Monster::removeHealth()
-{
-    string monster_health = name + ": [" + to_string(health) + " / " + to_string(baseHealth) + "]";
-    printString(string(monster_health.size(), ' '), midWidth(GAMEPLAY_W, monster_health.size()), GAMEPLAY_H + DESCRIPTION_H * 1 / 4);
 }
