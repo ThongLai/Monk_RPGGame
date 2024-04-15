@@ -1,2 +1,4 @@
-﻿  EmptyRoom.cpp
+﻿  CommonConfig.cpp
+D:\ThongLai\OneDrive - University of Huddersfield\Object-Oriented Systems Development\Assignment\Monk_RGBGame\Monk_RGBGame\CommonConfig.cpp(119,48): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+D:\ThongLai\OneDrive - University of Huddersfield\Object-Oriented Systems Development\Assignment\Monk_RGBGame\Monk_RGBGame\CommonConfig.cpp(121,41): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
   Monk_RGBGame.vcxproj -> D:\ThongLai\OneDrive - University of Huddersfield\Object-Oriented Systems Development\Assignment\Monk_RGBGame\Debug\Monk_RGBGame.exe

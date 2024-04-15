@@ -10,7 +10,7 @@ Room::Room(string roomName, int nameColor, int descColor)
 
 Room::~Room()
 {
-    removeMess(roomName, midWidth(GAMEPLAY_W, roomName.size()), GAMEPLAY_H + 1);
+    removeString(roomName, midWidth(GAMEPLAY_W, roomName.size()), GAMEPLAY_H + 1);
 
     delete leftRoom;
     delete rightRoom;

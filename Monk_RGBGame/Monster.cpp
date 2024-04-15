@@ -18,8 +18,38 @@ int Monster::getBaseHealth() {
     return baseHealth; 
 }
 
+string* Monster::getArtModel()
+{
+    return artModel;
+}
+
+int Monster::getArtHeight()
+{
+    return artHeight;
+}
+
+int Monster::getArtWidth()
+{
+    return artWidth;
+}
+
 void Monster::setBaseHealth(int base) {
     baseHealth = base; 
+}
+
+void Monster::setArtModel(string* artModel)
+{
+    this->artModel = artModel;
+}
+
+void Monster::setArtHeight(int artHeight)
+{
+    this->artHeight = artHeight;
+}
+
+void Monster::setArtWidth(int artWidth)
+{
+    this->artWidth = artWidth;
 }
 
 void Monster::takeDamage(int amount) {

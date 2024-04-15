@@ -32,10 +32,11 @@ private:
     //Pause game process
     bool isPause;
 
+    //Catch other buttons from the keyboard to check whether it is a command or not
+    string buf;
 public:
     GameHandler();
     ~GameHandler();
-
 
     void StartUp(); //Set up when start up
     void init(); //Initialize important parameters in the game
@@ -52,6 +53,9 @@ public:
     void drawStatus();
     void drawGUI();
     void updateTime();
+    void checkUnDeadCMD(); //Check whether the player types a command or not
+    void addBuf(char key); //Catch a key from keyboard
+    void displayCommand();
 
     void increaseRoomCount() { roomsExplored ++; }
     int getRoomCount() { return roomsExplored; }

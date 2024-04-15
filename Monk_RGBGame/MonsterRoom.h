@@ -2,6 +2,8 @@
 
 #include "Room.h"
 #include "Goblin.h"
+#include "Chupacabra.h"
+#include "Foot.h"
 
 extern string ACTION_PROMPT[];
 extern int ACTION_PROMPT_SIZE;

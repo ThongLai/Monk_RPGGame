@@ -60,6 +60,11 @@ extern int STATUS_W;
 extern int SAVE_SIZE;
 extern int LEADERBOARD_SIZE;
 
+extern int BUF;
+extern string CHEATCODE;
+extern bool UNDEADCMD;
+
+
 //Rooms Chances
 extern int TREASURE_ROOM_CHANCE;
 extern int EMPTY_ROOM_CHANCE;
@@ -69,18 +74,37 @@ extern int TREASURE_ROOM_COLOR;
 extern int EMPTY_ROOM_COLOR;
 extern int MONTER_ROOM_COLOR;
 
+//Item Chances
+extern int ITEM_CHANCE;
+extern int SWORD_CHANCE;
+extern int SHEILD_CHANCE;
+extern int CACTUS_CHANCE;
 
 //Entities Parameters
+// Player
+extern int PLAYER_COLOR;
 extern int PLAYER_BASE_HEALTH;
 extern int PLAYER_BASE_DAMAGE;
 extern int PLAYER_CANCEL_ACTION_CHANCE;
-extern int PLAYER_COLOR;
 
+// Monsters
+extern int GOBLIN_COLOR;
 extern int GOBLIN_BASE_HEALTH;
 extern int GOBLIN_BASE_DAMAGE;
 extern int GOBLIN_CANCEL_ACTION_CHANCE;
 extern int GOBLIN_ATK_DEF_CHANCE;
-extern int GOBLIN_COLOR;
+
+extern int CHUPACABRA_COLOR;
+extern int CHUPACABRA_BASE_HEALTH;
+extern int CHUPACABRA_BASE_DAMAGE;
+extern int CHUPACABRA_CANCEL_ACTION_CHANCE;
+extern int CHUPACABRA_ATK_DEF_CHANCE;
+
+extern int FOOT_COLOR;
+extern int FOOT_BASE_HEALTH;
+extern int FOOT_BASE_DAMAGE;
+extern int FOOT_CANCEL_ACTION_CHANCE;
+extern int FOOT_ATK_DEF_CHANCE;
 
 
 // Set up when starting up functions
@@ -106,7 +130,8 @@ int midHeight(int height, int content_height);
 
 void printString(string message, int X, int Y, int text_color = WHITE, int bg_color = BLACK);
 void printStringCenter(string message, int text_color = WHITE, int bg_color = BLACK);
-void removeMess(string message, int X, int Y);
+void removeString(string message, int X, int Y);
+void removeStringCenter(string message);
 
 void printOnDescriptionAndWait(string prompt, int X, int Y = GAMEPLAY_H + midHeight(DESCRIPTION_H, 1), int text_color = WHITE, int bg_color = BLACK);
 void printOnDescriptionCenterAndWait(string prompt, int text_color = WHITE, int bg_color = BLACK);

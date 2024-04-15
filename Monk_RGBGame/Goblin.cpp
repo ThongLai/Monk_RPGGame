@@ -12,4 +12,8 @@ Goblin::Goblin() : Monster()
 
     cancel_chance = GOBLIN_CANCEL_ACTION_CHANCE;
     attack_chance = GOBLIN_ATK_DEF_CHANCE;
+
+    setArtModel(GOBLIN_ART);
+    setArtHeight(GOBLIN_HEIGHT);
+    setArtWidth(GOBLIN_WIDTH);
 }

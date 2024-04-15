@@ -11,6 +11,13 @@ string TREASURE_PROMPT[] =
 };
 int TREASURE_PROMPT_SIZE = sizeof(TREASURE_PROMPT) / sizeof(string);
 
+string IGNORE_PROMPT[] =
+{
+    "Collect Treasure",
+    "Still Ignore",
+};
+int IGNORE_PROMPT_SIZE = sizeof(IGNORE_PROMPT) / sizeof(string);
+
 bool TreasureRoom::processRoom(Player* player) {
 
     printOnGameplayCenterAndWait("Your stomach rumbles. Your inside, ready. This is it. It's the Treasure Room! Right in front of you... ");
@@ -37,10 +44,14 @@ bool TreasureRoom::processRoom(Player* player) {
     treasureMenu.removeMenu();
 
     if (player_action == 1) {
-        treasureMenu.setTitle("Are you sure you want to IGNORE it?");
-        treasureMenu.printMenu();
-        player_action = treasureMenu.inputMenu();
-        treasureMenu.removeMenu();
+        MENU ignoreMenu("Are you sure you want to IGNORE it?", IGNORE_PROMPT, IGNORE_PROMPT_SIZE, GAMEPLAY_W / 10, GAMEPLAY_H + 2 + midHeight(DESCRIPTION_H, box_height * IGNORE_PROMPT_SIZE), box_width, box_height, TREASURE_ROOM_COLOR);
+        ignoreMenu.setBoxFormat(0, box_width, box_height, TREASURE_ROOM_COLOR, BLACK);
+        ignoreMenu.setBoxFormat(1, box_width, box_height, LIGHTRED, BLACK);
+        ignoreMenu.printMenu();
+        player_action = ignoreMenu.inputMenu();
+        ignoreMenu.removeMenu();
+
+        removeString(prompt, midWidth(GAMEPLAY_W, prompt.size()), GAMEPLAY_H + midHeight(DESCRIPTION_H, 1));
 
         if (player_action == 1) {
             removeArt(
@@ -50,7 +61,10 @@ bool TreasureRoom::processRoom(Player* player) {
                 midHeight(GAMEPLAY_H, TREASURE_HEIGHT)
             );
 
-            printStringCenter("It's WEIRD that you choose to ignore the Treasure");
+            string prompt = "It's WEIRD that you choose to ignore the Treasure";
+            printStringCenter(prompt);
+            removeStringCenter(prompt);
+
             printOnDescriptionCenterAndWait("Oh well... you are probably an adventurous person. Let continue then!", player->getPlayerColor());
             return true;
         }

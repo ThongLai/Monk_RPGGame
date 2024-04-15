@@ -20,8 +20,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Box.cpp" />
+    <ClCompile Include="Chupacabra.cpp" />
     <ClCompile Include="CommonConfig.cpp" />
     <ClCompile Include="EmptyRoom.cpp" />
+    <ClCompile Include="Foot.cpp" />
     <ClCompile Include="GameHandler.cpp" />
     <ClCompile Include="Goblin.cpp" />
     <ClCompile Include="main.cpp" />
@@ -35,8 +37,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Box.h" />
+    <ClInclude Include="Chupacabra.h" />
     <ClInclude Include="CommonConfig.h" />
     <ClInclude Include="EmptyRoom.h" />
+    <ClInclude Include="Foot.h" />
     <ClInclude Include="GameHandler.h" />
     <ClInclude Include="Goblin.h" />
     <ClInclude Include="Menu.h" />

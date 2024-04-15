@@ -6,7 +6,7 @@ EmptyRoom::EmptyRoom() : Room("Empty Room", EMPTY_ROOM_COLOR, EMPTY_ROOM_COLOR)
     setDescription("It is a place where the mind can roam freely, unburdened by the chaos of the outside world.");
     
     // 20% chance to have an item
-    hasItem = (generateRand(0, 100) < 20);
+    hasItem = (generateRand(0, 100) < ITEM_CHANCE);
 }
 
 bool EmptyRoom::Item()
@@ -76,19 +76,80 @@ bool EmptyRoom::processRoom(Player* player) {
         itemMenu.removeMenu();
 
         if (player_action == 0) {
-            if (generateRand(1, 100) < 21) {
-                printOnDescriptionCenterAndWait("You approach the item and pick it up... It's a Staff of Protection!", EMPTY_ROOM_COLOR);
-                
-                player->setHasProtection(true);
+            int item_chance = generateRand(0, 100);
 
-                printOnDescriptionCenterAndWait("During your next combat, the Staff of Protection will block the first attack.");
+            printOnDescriptionCenterAndWait("You approach the item and pick it up... ", EMPTY_ROOM_COLOR);
+
+            if (item_chance < SWORD_CHANCE) {
+                drawArt(
+                    SWORD_ART,
+                    SWORD_HEIGHT,
+                    midWidth(GAMEPLAY_W, SWORD_WIDTH),
+                    midHeight(GAMEPLAY_H, SWORD_HEIGHT),
+                    MAGENTA
+                );
+
+                printOnDescriptionCenterAndWait("It's the Sword of Hero!", MAGENTA);
+                
+                player->setDamage(player->getDamage() + 1);
+                player->displayDamage(MAGENTA);
+
+                printOnDescriptionCenterAndWait("With the Sword of Hero, your Attack Damage is increased by 1.", MAGENTA);
+
+                removeArt(
+                    SWORD_HEIGHT,
+                    SWORD_WIDTH,
+                    midWidth(GAMEPLAY_W, SWORD_WIDTH),
+                    midHeight(GAMEPLAY_H, SWORD_HEIGHT)
+                );
+            }
+            else if (item_chance < SHEILD_CHANCE) {
+                drawArt(
+                    SHIELD_ART,
+                    SHIELD_HEIGHT,
+                    midWidth(GAMEPLAY_W, SHIELD_WIDTH),
+                    midHeight(GAMEPLAY_H, SHIELD_HEIGHT),
+                    LIGHTBLUE
+                );
+
+                printOnDescriptionCenterAndWait("It's the Shield of Angel!", LIGHTBLUE);
+
+                player->setHasProtection(true);
+                player->displayProtection();
+
+                printOnDescriptionCenterAndWait("During your next combat, the Shield of Angel will block the first attack.", LIGHTBLUE);
+
+                removeArt(
+                    SHIELD_HEIGHT,
+                    SHIELD_WIDTH,
+                    midWidth(GAMEPLAY_W, SHIELD_WIDTH),
+                    midHeight(GAMEPLAY_H, SHIELD_HEIGHT)
+                );
             }
             else {
+                drawArt(
+                    CACTUS_ART,
+                    CACTUS_HEIGHT,
+                    midWidth(GAMEPLAY_W, CACTUS_WIDTH),
+                    midHeight(GAMEPLAY_H, CACTUS_HEIGHT),
+                    GREEN
+                );
+
                 player->removeHealth();
                 player->takeDamage(1);
                 player->displayHealth();
 
-                printOnDescriptionCenterAndWait("You approach the item and pick it up... OUCH! It was a sewing needle! You lose 1 HP. :(", RED);
+                printOnDescriptionCenterAndWait("OUCH! It's a Cactus! You lose 1 HP. :(", RED);
+            
+                removeArt(
+                    CACTUS_HEIGHT,
+                    CACTUS_WIDTH,
+                    midWidth(GAMEPLAY_W, CACTUS_WIDTH),
+                    midHeight(GAMEPLAY_H, CACTUS_HEIGHT)
+                );
+
+                if (!player->isAlive())
+                    return false;
             }
         }
     }

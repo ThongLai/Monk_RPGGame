@@ -40,6 +40,11 @@ void Player::setHealth(int health) {
     this->health = health;
 }
 
+void Player::setDamage(int damage)
+{
+    this->damage = damage;
+}
+
 void Player::setHasProtection(bool isProtected) {
     this->isProtected = isProtected;
 }
@@ -80,10 +85,15 @@ void Player::setPlayer()
 //Subtract some health from the player's current health.
 void Player::takeDamage(int amount) {
     if (isProtected) {
-        printOnDescriptionCenterAndWait(name + "got PROTECTED by the Staff of Protection!");
+        displayHealth();
+        printOnDescriptionCenterAndWait(name + " got PROTECTED by the Shield of Angel!", LIGHTBLUE);
         isProtected = false;
+        displayProtection();
         return;
     }
+
+    if (UNDEADCMD)
+        return;
 
     health = health - amount;
 }
@@ -117,4 +127,19 @@ void Player::removeHealth()
 {
     string player_health = "[" + to_string(health) + " / " + to_string(PLAYER_BASE_HEALTH) + "]";
     printString(string(player_health.size(), ' '), GAMEPLAY_W + midWidth(STATUS_W, STATUS_VAR[0].size() + 10) + STATUS_VAR[0].size(), midHeight(SCREEN_HEIGHT, STATUS_VAR_SIZE + GUIDEBUTTONS_SIZE + 1) * 3 / 5, playerColor);
+}
+
+void Player::displayDamage(int color)
+{
+    printString(to_string(damage), GAMEPLAY_W + midWidth(STATUS_W, STATUS_VAR[0].size() + 10) + STATUS_VAR[0].size(), midHeight(SCREEN_HEIGHT, STATUS_VAR_SIZE + GUIDEBUTTONS_SIZE + 1) * 3 / 5 + 2, color);
+}
+
+void Player::displayProtection()
+{
+    string prompt = "[[PROTECTED]]";
+
+    if (isProtected)
+        printString(prompt, GAMEPLAY_W + midWidth(STATUS_W, prompt.size()), midHeight(SCREEN_HEIGHT, STATUS_VAR_SIZE + GUIDEBUTTONS_SIZE + 1) * 3 / 5 - 3, LIGHTBLUE);
+    else
+        printString(string(prompt.size(), ' '), GAMEPLAY_W + midWidth(STATUS_W, prompt.size()), midHeight(SCREEN_HEIGHT, STATUS_VAR_SIZE + GUIDEBUTTONS_SIZE + 1) * 3 / 5 - 3, LIGHTBLUE);
 }

@@ -27,15 +27,11 @@ void GameHandler::init()
 }
 
 void GameHandler::subThread() {
-    int buf = 0;
+    int key = 0;
     while (true) {
-        if (_kbhit())
-            buf = toupper(_getch());
+        addBuf(BUF);
 
-        if (buf == 'P' || buf == 'R' || buf == 'M' || buf == 'L' || buf == ESC)
-            pauseGame();
-
-        Sleep(200);
+        Sleep(50);
     }
 }
 
@@ -86,6 +82,8 @@ void GameHandler::processGame()
         GenerateNewRooms();
         MoveRoom();
     }
+
+    sub_thread.detach();
 }
 
 void GameHandler::pauseGame()
@@ -117,11 +115,10 @@ void GameHandler::drawStatus()
     player->displayHealth();
 
     // Attack:
-    printString(to_string(player->getDamage()), GAMEPLAY_W + midWidth(STATUS_W, STATUS_VAR[0].size() + 10) + STATUS_VAR[0].size(), midHeight(SCREEN_HEIGHT, STATUS_VAR_SIZE + GUIDEBUTTONS_SIZE + 1) * 3 / 5 + 2, player->getPlayerColor());
+    player->displayDamage();
 
     // Rooms:
     printString(to_string(roomsExplored), GAMEPLAY_W + midWidth(STATUS_W, STATUS_VAR[0].size() + 10) + STATUS_VAR[0].size(), midHeight(SCREEN_HEIGHT, STATUS_VAR_SIZE + GUIDEBUTTONS_SIZE + 1) * 3 / 5 + 4, player->getPlayerColor());
-
 
     //displayCommand();
 }
@@ -130,10 +127,10 @@ void GameHandler::drawGUI()
 {
     BOX side[2];
 
-    side[0].setBox(0, 0, GAMEPLAY_W, GAMEPLAY_H, GREEN, BLACK);
+    side[0].setBox(0, 0, GAMEPLAY_W, GAMEPLAY_H, LIGHTGREEN, BLACK);
     side[0].printBox();
 
-    side[1].setBox(0, GAMEPLAY_H, GAMEPLAY_W, DESCRIPTION_H, GREEN, BLACK);
+    side[1].setBox(0, GAMEPLAY_H, GAMEPLAY_W, DESCRIPTION_H, LIGHTGREEN, BLACK);
     side[1].printBox();
 }
 
@@ -149,6 +146,42 @@ void GameHandler::updateTime()
     cout << setfill('0') << setw(2) << TIME / 3600 << ":" << setfill('0') << setw(2) << (TIME / 60) % 60 << ":" << setfill('0') << setw(2) << TIME % 60 << endl;
 }
 
+void GameHandler::checkUnDeadCMD()
+{
+    if (buf == CHEATCODE)
+    {
+        UNDEADCMD = !UNDEADCMD;
+        displayCommand();
+        buf.clear();
+    }
+}
+
+void GameHandler::addBuf(char key)
+{
+    if (!buf.empty() && key == buf.back())
+        return;
+
+    if (CHEATCODE.compare(0, buf.size() + 1, buf + key) == 0)
+    {
+        buf.push_back(key);
+        checkUnDeadCMD();
+    }
+    else
+    {
+        buf.clear();
+        buf.push_back(key);
+    }
+}
+
+void GameHandler::displayCommand()
+{
+    string prompt = "UNDEAD COMMAND - ON";
+    if (UNDEADCMD)
+        printString(prompt, GAMEPLAY_W + midWidth(STATUS_W, 19), SCREEN_HEIGHT - 3, RED);
+    else
+        removeString(prompt, GAMEPLAY_W + midWidth(STATUS_W, 19), SCREEN_HEIGHT - 3);
+}
+
 void GameHandler::GenerateNewRooms() {
     roomsExplored += 1;
 
@@ -156,17 +189,14 @@ void GameHandler::GenerateNewRooms() {
     printString(to_string(roomsExplored), GAMEPLAY_W + midWidth(STATUS_W, STATUS_VAR[0].size() + 10) + STATUS_VAR[0].size(), midHeight(SCREEN_HEIGHT, STATUS_VAR_SIZE + GUIDEBUTTONS_SIZE + 1) * 3 / 5 + 4, player->getPlayerColor());
 
     //Set the chance of finding a treasure gradually higher
-    if (roomsExplored > 10) {
-        TREASURE_ROOM_CHANCE += 20;
-        EMPTY_ROOM_CHANCE -= 10;
-        MONSTER_ROOM_CHANCE -= 10;
-        printOnDescriptionCenterAndWait("The Player has explored more than 10 rooms - increasing the chance of treasure rooms.", LIGHTMAGENTA);
-    }
-    else if (roomsExplored > 5) {
-        TREASURE_ROOM_CHANCE += 10;
-        EMPTY_ROOM_CHANCE -= 5;
+    if (roomsExplored == 10) {
+        TREASURE_ROOM_CHANCE += 5;
         MONSTER_ROOM_CHANCE -= 5;
-
+        printOnDescriptionCenterAndWait("The Player has explored more than 10 rooms - increasing the chance of treasure rooms.", TREASURE_ROOM_COLOR);
+    }
+    else if (roomsExplored == 5) {
+        TREASURE_ROOM_CHANCE += 5;
+        EMPTY_ROOM_CHANCE -= 5;
         printOnDescriptionCenterAndWait("The Player has explored more than 5 rooms - increasing the chance of treasure rooms slightly", TREASURE_ROOM_COLOR);
     }
     

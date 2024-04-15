@@ -24,6 +24,7 @@ public:
 
     void setName(string name);
     void setHealth(int health);
+    void setDamage(int damage);
     void setHasProtection(bool isProtected);
 
     void setPlayer();
@@ -33,4 +34,6 @@ public:
 
     void displayHealth();
     void removeHealth();
+    void displayDamage(int color = PLAYER_COLOR);
+    void displayProtection();
 };

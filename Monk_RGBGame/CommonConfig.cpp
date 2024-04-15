@@ -17,10 +17,7 @@ string GUIDEBUTTONS[] =
 {
     "<P> - Pause/Continue",
     "<R> - Reset Game",
-    "<M> - Save Game",
-    "<L> - Load Game",
     "<Esc> - Return to Main Menu"
-
 };
 int GUIDEBUTTONS_SIZE = sizeof(GUIDEBUTTONS) / sizeof(string);
 
@@ -31,6 +28,10 @@ int STATUS_W;
 int SAVE_SIZE;
 int LEADERBOARD_SIZE;
 
+int BUF;
+string CHEATCODE = "THONG";
+bool UNDEADCMD = false; //Indicate the UNDEAD mode (for testing game)
+
 // Default Chances: 5/35/60
 int TREASURE_ROOM_CHANCE = 5;
 int EMPTY_ROOM_CHANCE = 35;
@@ -40,24 +41,39 @@ int TREASURE_ROOM_COLOR = YELLOW;
 int EMPTY_ROOM_COLOR = CYAN;
 int MONTER_ROOM_COLOR = LIGHTRED;
 
-//Entities Parameters
+// Items Chances: 20/20/30/50
+int ITEM_CHANCE = 20;
+int SWORD_CHANCE = 20;
+int SHEILD_CHANCE = 30;
+int CACTUS_CHANCE = 50;
+
+// Entities Parameters
 // Player: Health = 15, Attack = 3, Cancel Chance = 30
 int PLAYER_COLOR = LIGHTCYAN;
 int PLAYER_BASE_HEALTH = 15;
 int PLAYER_BASE_DAMAGE = 3;
 int PLAYER_CANCEL_ACTION_CHANCE = 15;
 
-// Goblin: Health = 15, Attack = 2, Cancel Chance = 15, ATK/DEF Chance = 30
-int GOBLIN_COLOR = LIGHTGREEN;
+// Goblin: Health = 10, Attack = 3, Cancel Chance = 15, ATK/DEF Chance = 30
+int GOBLIN_COLOR = GREEN;
 int GOBLIN_BASE_HEALTH = 10;
 int GOBLIN_BASE_DAMAGE = 2;
 int GOBLIN_CANCEL_ACTION_CHANCE = 15;
 int GOBLIN_ATK_DEF_CHANCE = 30;
 
+// Chupacabra: Health = 15, Attack = 4, Cancel Chance = 30, ATK/DEF Chance = 50
+int CHUPACABRA_COLOR = LIGHTMAGENTA;
+int CHUPACABRA_BASE_HEALTH = 15;
+int CHUPACABRA_BASE_DAMAGE = 4;
+int CHUPACABRA_CANCEL_ACTION_CHANCE = 30;
+int CHUPACABRA_ATK_DEF_CHANCE = 50;
 
-// Zombie: Health = 3, Attack = 4, Defence = 1
-// Vampire: Health = 3, Attack = 2, Defence = 4
-
+// Foot: Health = 8, Attack = 1, Cancel Chance = 50, ATK/DEF Chance = 30
+int FOOT_COLOR = BROWN;
+int FOOT_BASE_HEALTH = 8;
+int FOOT_BASE_DAMAGE = 1;
+int FOOT_CANCEL_ACTION_CHANCE = 50;
+int FOOT_ATK_DEF_CHANCE = 30;
 
 // Set up when starting up functions
 void setRasterFonts()
@@ -186,21 +202,19 @@ void printString(string message, int X, int Y, int text_color, int bg_color)
 
 void printStringCenter(string message, int text_color, int bg_color)
 {
-    Status SavedStatus;
-    SetTextColor(DefineColor(text_color, bg_color));
-
-    GotoXY(midWidth(GAMEPLAY_W, message), midHeight(GAMEPLAY_H, 1));
-    cout << message;
+    printString(message, midWidth(GAMEPLAY_W, message), midHeight(GAMEPLAY_H, 1));
 }
 
-void removeMess(string message, int X, int Y)
+void removeString(string message, int X, int Y)
 {
-    Status SavedStatus;
-    SetTextColor(SavedStatus.getColor());
-
-    GotoXY(X, Y);
-    cout << string(message.size(), ' ');
+    printString(string(message.size(), ' '), X, Y);
 }
+
+void removeStringCenter(string message)
+{
+    removeString(message, midWidth(GAMEPLAY_W, message), midHeight(GAMEPLAY_H, 1));
+}
+
 
 void printOnDescriptionAndWait(string prompt, int X, int Y, int text_color, int bg_color)
 {
@@ -233,7 +247,7 @@ void waitForKeyBoard(int X, int Y)
     GotoXY(X, Y);
     system("pause");
 
-    removeMess("Press any key to continue . . .", X, Y);
+    removeString("Press any key to continue . . .", X, Y);
 }
 
 string waitForInput(string prompt, int X, int Y, int text_color, int bg_color)

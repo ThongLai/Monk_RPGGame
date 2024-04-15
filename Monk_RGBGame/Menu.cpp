@@ -119,7 +119,6 @@ void MENU::selectedBox(int index)
 int MENU::inputMenu()
 {
 	int i = 0;
-	char input;
 	bool isPress = false;
 	while (true)
 	{
@@ -133,26 +132,26 @@ int MENU::inputMenu()
 			mciSendString(TEXT("play Menu_Select from 0"), NULL, 0, NULL);
 
 			isPress = true;
-			input = toupper(_getch());
+			BUF = toupper(_getch());
 
-			if (input == -32)
-				input = toupper(_getch());
+			if (BUF == -32)
+				BUF = toupper(_getch());
 
-			if (input == KEY_UP || input == 'W')
+			if (BUF == KEY_UP || BUF == 'W')
 			{
 				nBox[i].printContent();
 				i = (i == 0) ? i = n - 1 : i -= 1;
 			}
-			else if (input == KEY_DOWN || input == 'S')
+			else if (BUF == KEY_DOWN || BUF == 'S')
 			{
 				nBox[i].printContent();
 				i = (i == n - 1) ? i = 0 : i += 1;
 			}
-			else if (input == ENTER)
+			else if (BUF == ENTER)
 			{
 				return i;
 			}
-			else if (input == ESC)
+			else if (BUF == ESC)
 			{
 				return -1;
 			}

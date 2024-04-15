@@ -3,31 +3,17 @@
 MonsterRoom::MonsterRoom(int monsterId) : Room("Monster Room", MONTER_ROOM_COLOR, MONTER_ROOM_COLOR) {
     setDescription("Monster room, danger lurks. The monk must face a formidable creature in a fierce battle for survival.");
 
-    // Randomise the monster. 0 = Goblin, 1 = Zombie, 2 = Vampire.
-
+    // Randomise the monster. 0 = Goblin, 1 = Chupacabra, 2 = Foot.
     switch (monsterId) {
-    default: // Default to case 0 (Goblin monster)
     case(0):
         monster = new Goblin;
         break;
-        //case(1):
-        //    this->setName("Zombie");
-        //    this->setBaseHealth(8);
-        //    this->setHealth(this->getBaseHealth());
-        //    this->setDamage(3);
-        //    this->setDescription("Blurrrrrghhh!");
-        //    this->attackChance = 95;
-        //    this->defendChance = 5;
-        //    break;
-        //case(2):
-        //    this->setName("Vampire");
-        //    this->setBaseHealth(12);
-        //    this->setHealth(this->getBaseHealth());
-        //    this->setDamage(2);
-        //    this->setDescription("Mwuahahahaha!");
-        //    this->defendChance = 65;
-        //    this->attackChance = 35;
-        //    break;
+    case(1):
+        monster = new Chupacabra;
+        break;
+    case(2):
+        monster = new Foot;
+        break;
     }
 }
 
@@ -45,10 +31,10 @@ int ACTION_PROMPT_SIZE = sizeof(ACTION_PROMPT) / sizeof(string);
 
 bool MonsterRoom::processRoom(Player* player) {
     drawArt(
-        GOBLIN_ART,
-        GOBLIN_HEIGHT,
-        midWidth(GAMEPLAY_W, GOBLIN_WIDTH),
-        midHeight(GAMEPLAY_H, GOBLIN_HEIGHT),
+        monster->getArtModel(),
+        monster->getArtHeight(),
+        midWidth(GAMEPLAY_W, monster->getArtWidth()),
+        midHeight(GAMEPLAY_H, monster->getArtHeight()),
         monster->getMonsterColor()
     );
 
@@ -145,10 +131,10 @@ bool MonsterRoom::processRoom(Player* player) {
     }
 
     removeArt(
-        GOBLIN_HEIGHT,
-        GOBLIN_WIDTH,
-        midWidth(GAMEPLAY_W, GOBLIN_WIDTH),
-        midHeight(GAMEPLAY_H, GOBLIN_HEIGHT)
+        monster->getArtHeight(),
+        monster->getArtWidth(),
+        midWidth(GAMEPLAY_W, monster->getArtWidth()),
+        midHeight(GAMEPLAY_H, monster->getArtHeight())
     );
 
     monster->removeHealth();

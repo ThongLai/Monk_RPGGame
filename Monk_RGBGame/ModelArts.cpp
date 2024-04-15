@@ -18,6 +18,7 @@ string TITLE[] =
 int TITLE_HEIGHT = sizeof(TITLE) / sizeof(string);
 int TITLE_WIDTH = artWidth(TITLE, TITLE_HEIGHT);
 
+//Empty Room
 string EMPTY_ROOM_ART[] =
 {
 	"         \\\\                *                      ",
@@ -55,6 +56,85 @@ string EMPTY_ROOM_ART[] =
 int EMPTY_ROOM_HEIGHT = sizeof(EMPTY_ROOM_ART) / sizeof(string);
 int EMPTY_ROOM_WIDTH = artWidth(EMPTY_ROOM_ART, EMPTY_ROOM_HEIGHT);
 
+string CACTUS_ART[] =
+{
+	"        _    _",
+	"       | |  | |",
+	"      -| |  | |-",
+	"  _    | |- | |",
+	"-| |   | |  | |-",
+	" |.|  -| ||/  |",
+	" | |-  |  ___/",
+	"-|.|   | | |",
+	" |  \\_|| |",
+	"  \\____  |",
+	"   |   | |-",
+	"       | |",
+	"      -| | ",
+	"       |_|"
+};
+int CACTUS_HEIGHT = sizeof(CACTUS_ART) / sizeof(string);
+int CACTUS_WIDTH = artWidth(CACTUS_ART, CACTUS_HEIGHT);
+
+string SHIELD_ART[] =
+{
+	"|                            |",
+	"| @@@@@@@@@@@@@@@@@@@@@@@@@@ |",
+	"| @                        @ |",
+	"| @           /\\           @ |",
+	"| @         {    }         @ |",
+	"| @          |  |          @ |",
+	"| @          |  |          @ |",
+	"| @   ^ -----|  |----- ^   @ |",
+	"| @ <                    > @ |",
+	"| @   \\/-----|  |-----\\/   @ |",
+	"| @          |  |          @ |",
+	"| @          |  |          @ |",
+	"| @          |  |          @ |",
+	"| @          |  |          @ |",
+	"| @          |  |          @ |",
+	"| @         {    }         @ |",
+	"| @           \\/           @ |",
+	" \\ @                      @ /",
+	"  \\ @                    @ /",
+	"   \\ @                  @ / ",
+	"    \\ @                @ /",
+	"     \\ @              @ /",
+	"      \\ @            @ /",
+	"       \\ @@@@@@@@@@@@ /"
+};
+int SHIELD_HEIGHT = sizeof(SHIELD_ART) / sizeof(string);
+int SHIELD_WIDTH = artWidth(SHIELD_ART, SHIELD_HEIGHT);
+
+string SWORD_ART[] =
+{
+	"       (_)",
+	"       |=|",
+	"       |=|",
+	"   /|__|_|__|\\",
+	"  (    ( )    )",
+	"   \\|\\/\\\\\" / \\/|/",
+	"     |  Y  |",
+	"     |  |  |",
+	"     |  |  |",
+	"    _|  |  |",
+	" __/ |  |  |\\",
+	"/  \\ |  |  |  \\",
+	"   __|  |  |   |",
+	"/\\/  |  |  |   |\\",
+	" <   +\\ |  |\\ />  \\",
+	"  >   + \\  | LJ    |",
+	"        + \\|+  \\  < \\",
+	"  (O)      +    |    )",
+	"   |             \\  /\\ ",
+	" ( | )   (o)      \\/  )",
+	"_\\\\|//__( | )______)_/ ",
+	"        \\\\|//"
+};
+int SWORD_HEIGHT = sizeof(SWORD_ART) / sizeof(string);
+int SWORD_WIDTH = artWidth(SWORD_ART, SWORD_HEIGHT);
+
+//Monsters
 string GOBLIN_ART[] = 
 {
 	"                   (    )",
@@ -85,6 +165,71 @@ string GOBLIN_ART[] =
 int GOBLIN_HEIGHT = sizeof(GOBLIN_ART) / sizeof(string);
 int GOBLIN_WIDTH = artWidth(GOBLIN_ART, GOBLIN_HEIGHT);
 
+string CHUPACABRA_ART[] =
+{
+	"                                  _.-.",
+	"                                 ._.-.\\",
+	"                    .^         _.-'=. \\\\",
+	"                  .'  )    .-._.-=-..' \\'.",
+	"               .'   .'   _.--._-='.'   |  `.  ^.",
+	"             .'   .'    _`.-.`=-./'.-. / .-.\\ `. `.",
+	"           .'    /      _.-=-=-/ | '._)`(_.'|   \\  `.",
+	"          /    /|       _.--=.'  `. (.-v-.)/    |\\   \\",
+	"        .'    / \\       _.-.' \\-.' `-..-..'     / \\   `.",
+	"       /     /   `-.._ .-.'      `.'  \" \". _..-'  |    |",
+	"      '      |    |   /   )        \\  /   \\   \\    \\    `.",
+	"     /      /    /   /   /\\                \\   \\   |      \\",
+	"    /      /    /  .'  .'\\ `.        .'     \\   |   \\      \\",
+	"   /      /    /  /   /   \\  `-    -' .`.    .  \\    \\     |",
+	"  |      /    / .''\\.'    | `.      .'   `.   \\  |    |    |",
+	" .'     /    / /   |      |      .'/       `.- `./    /    |",
+	" |     /    .-|   /--.    / `.    |    _.-''\\   |     |    \\",
+	".'    /  .-'  |  /    `-.|       .'\\_.'      `. |`.   |    |",
+	"|    |.-'     / /       /           \\          \\ \\ `. \\     \\",
+	"|    /       /  |      /             \\         |  `. `.|    |",
+	"|   |       /   `.     |      `   .'  \\        /    \\  \\    /",
+	"|   |      ///.-'.\\    |       \\ /    `\\      / /-.  \\ |    |",
+	"|   /      \\\\\\\\    `    \\.-     |    `-.\\     |/   \\\\\\\\'.",
+	" \\ |        \\\\\\|        |      / \\      |          //// |  /",
+	" | |         '''        |     /   \\     |          |//  |  \\",
+	" \\ |                    |.-  |     \\  .-|          ''   |  /",
+	"  \\|                    /    |    / ` ../                |/",
+	"                        /   |      /   `.",
+	"                       | | | \\   .'  `.. \\",
+	"                      / / / ._`. \\.'-. \\`/",
+	"                      |/ / /  `'  `  |/|/",
+	"                       \\|\\|"
+};
+int CHUPACABRA_HEIGHT = sizeof(CHUPACABRA_ART) / sizeof(string);
+int CHUPACABRA_WIDTH = artWidth(CHUPACABRA_ART, CHUPACABRA_HEIGHT);
+
+string FOOT_ART[] =
+{
+	"                 | |",
+	"                 | |",
+	"                 | |",
+	"                 | |   ",
+	"                 | |        ",
+	"             ,-\"\"; :\"\"-.",
+	"             |`--...--'J",
+	"             |         J",
+	"             |         J",
+	"             |         J",
+	"             |         |",
+	"             F         |",
+	"             F        \\J",
+	"             F         7",
+	"            J          ;:.          ",
+	"           /   .        ::::...",
+	"          J   :             \"\"::::...",
+	"          F   `                    \":::\"-..___",
+	"          J        ___.....____            `\"\\",
+	"-----------\"\"----\"\"            \"\"\"----\"\"\"---'-------"
+};
+int FOOT_HEIGHT = sizeof(FOOT_ART) / sizeof(string);
+int FOOT_WIDTH = artWidth(FOOT_ART, FOOT_HEIGHT);
+
+//Treasure
 string TREASURE_ART[] =
 {
 	"*******************************************************************************",
