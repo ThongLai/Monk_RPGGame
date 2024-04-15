@@ -1,5 +1,5 @@
-# Monk - RPG Game
-Monk is a command-line RPG game developed using C++ and Object-Oriented Programming (OOP) principles where you take on the role of a skilled monk on a quest to defeat monsters and uncover hidden treasures.
+# Monk - RGB Game
+Monk is a command-line RGB game developed using C++ and Object-Oriented Programming (OOP) principles where you take on the role of a skilled monk on a quest to defeat monsters and uncover hidden treasures.
 
 ## Gameplay
 As the monk, you will explore various rooms, each with its own unique challenges and rewards.
