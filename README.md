@@ -13,5 +13,5 @@ There are different types of rooms you may encounter, including monster rooms an
 - Engaging turn-based combat system against challenging monsters.
 - Randomly generated room layouts for a unique gameplay experience.
 - Exciting treasure rooms with various powerful items to collect.
-- Experience points and leveling system to improve your monk's attributes.
+- Experience points and acttacking system to improve your monk's attributes.
 - Interactive and immersive RPG gameplay.
