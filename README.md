@@ -7,7 +7,7 @@ There are different types of rooms you may encounter, including monster rooms an
 
 - In Empty room, the Monk can pray to restore his health points fully. you will discover valuable items and equipment to enhance your monk's abilities. Make strategic decisions on which rooms to enter, as the difficulty increases the deeper you venture.
 - In Monster rooms, you will engage in turn-based combat with fearsome creatures. Use your skills and abilities wisely to defeat the monsters and progress further.
-- In Treasure rooms, the player can collect the treasure and gfind a way out of the Dungeon
+- In Treasure rooms, the player can collect the treasure and find a way out of the Dungeon
 
 ## Features
 - Engaging turn-based combat system against challenging monsters.
